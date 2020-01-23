@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3A3F4A</color>
+    <color name="colorPrimaryDark">#2A2F3A</color>
+    <color name="colorAccent">#CDD1C4</color>
+
+    <color name="placementWin">#5C80BC</color>
+    <color name="placementLost">#666666</color>
+
+    <color name="textPrimary">#DDDDDD</color>
+    <color name="textSecondary">#AAAAAA</color>
+    <color name="textFooters">#7D7D7D</color>
+
+    <color name="searchBarBG">#DBDAD8</color>
+
+    <color name="unitBorderRarity0">#808080</color>
+    <color name="unitBorderRarity1">#11B288</color>
+    <color name="unitBorderRarity2">#207AC7</color>
+    <color name="unitBorderRarity3">#C440DA</color>
+    <color name="unitBorderRarity4">#FFB93B</color>
+    <color name="unitBorderRarity5">#FFFFFF</color>
+
+    <color name="traitBGTier1Start">#a1785d</color>
+    <color name="traitBGTier1End">#CA9372</color>
+
+    <color name="traitBGTier2Start">#707070</color>
+    <color name="traitBGTier2End">#A0A0A0</color>
+
+    <color name="traitBGTier3Start">#C28A27</color>
+    <color name="traitBGTier3End">#FFB93B</color>
+</resources>
