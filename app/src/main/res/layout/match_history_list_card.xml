@@ -6,7 +6,8 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="4dp"
     android:background="@color/colorPrimaryDark"
-    android:minHeight="105dp">
+    android:minHeight="105dp"
+    android:id="@+id/container">
 
     <TextView
         android:id="@+id/placement"

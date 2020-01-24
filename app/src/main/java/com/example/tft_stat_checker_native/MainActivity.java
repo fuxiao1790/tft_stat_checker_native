@@ -259,6 +259,10 @@ public class MainActivity extends Activity {
 
         target.setVerticalScrollBarEnabled(true);
 
+        targetAdapter.setOnCardClickListener((int position) -> {
+            Log.d("On Click", position + "");
+        });
+
         if (summonerData != null && summonerRankedData != null) {
             updatePlayerCard();
         }

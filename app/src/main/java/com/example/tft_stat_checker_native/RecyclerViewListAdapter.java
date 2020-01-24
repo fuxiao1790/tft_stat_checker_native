@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -48,17 +49,8 @@ public class RecyclerViewListAdapter extends RecyclerView.Adapter<RecyclerViewLi
     // matchID => ArrayList
     private HashMap<String, ArrayList<ImageView>> traitIcons;
 
-    public RecyclerViewListAdapter(ArrayList<MatchData> data) {
-        this.data = new ArrayList<>();
-        this.data.add(new MatchData(0, new ArrayList<>(), new ArrayList<>(), MatchData.TYPE_HEADER, "00000000"));
-        this.data.addAll(data);
-        this.data.add(new MatchData(0, new ArrayList<>(), new ArrayList<>(), MatchData.TYPE_FOOTER, "00000000"));
-        this.moreToLoad = true;
-        this.loadingState = new HashMap<>();
-        for (int i = 0; i < data.size(); i++) {
-            loadingState.put(data.get(i).getId(), RecyclerViewListAdapter.NONE);
-        }
-    }
+    // on click listener
+    private OnCardClickListener onCardClickListener;
 
     public RecyclerViewListAdapter(RequestQueue queue) {
         this.data = new ArrayList<>();
@@ -115,6 +107,10 @@ public class RecyclerViewListAdapter extends RecyclerView.Adapter<RecyclerViewLi
         this.moreToLoad = moreToLoad;
     }
 
+    public void setOnCardClickListener(OnCardClickListener onCardClickListener) {
+        this.onCardClickListener = onCardClickListener;
+    }
+
     @Override
     public RecyclerViewListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         switch (viewType) {
@@ -128,6 +124,11 @@ public class RecyclerViewListAdapter extends RecyclerView.Adapter<RecyclerViewLi
             }
             default: {
                 RecyclerViewContentViewHolder viewHolder = new RecyclerViewContentViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.match_history_list_card, parent, false));
+                viewHolder.setOnCardClickListener((int position) -> {
+                    if (this.onCardClickListener != null) {
+                        onCardClickListener.onClick(position);
+                    }
+                });
                 return viewHolder;
             }
         }
@@ -137,6 +138,7 @@ public class RecyclerViewListAdapter extends RecyclerView.Adapter<RecyclerViewLi
     public void onBindViewHolder(@NonNull RecyclerViewListViewHolder holder, int position) {
         // update view based on view type
         if (holder instanceof RecyclerViewContentViewHolder) {
+
             // if current item has data render item normally
             // else fetch data and update state and notify recylcerview to update
             switch (loadingState.get(data.get(position).getId())) {
@@ -146,7 +148,7 @@ public class RecyclerViewListAdapter extends RecyclerView.Adapter<RecyclerViewLi
                     break;
                 }
                 case RecyclerViewListAdapter.NONE: {
-                    loadCardData(holder, position);
+                    loadCardData(position);
                     showLoading((RecyclerViewContentViewHolder) holder);
                     break;
                 }
@@ -287,9 +289,15 @@ public class RecyclerViewListAdapter extends RecyclerView.Adapter<RecyclerViewLi
         }
     }
 
-    private void loadCardData(@NonNull RecyclerViewListViewHolder holder, int position) {
+    public void reLoadData(int position) {
+        if (loadingState.get(data.get(position).getId()) == FAILED) {
+            this.loadCardData(position);
+        }
+    }
+
+    private void loadCardData(int position) {
         // set loading state to fetching
-        loadingState.put(data.get(position).getId(), RecyclerViewListAdapter.LOADING);
+        loadingState.put(data.get(position).getId(), LOADING);
 
         // fetch data and update recyclerview
         StringRequest req = API.getMatchResultByMatchID(
@@ -303,13 +311,13 @@ public class RecyclerViewListAdapter extends RecyclerView.Adapter<RecyclerViewLi
                         data.get(position).loadData(jsonRes, listHeaderData.getSummonerData().getPuuid());
 
                         // set loading state to LOADED
-                        loadingState.put(data.get(position).getId(), RecyclerViewListAdapter.LOADED);
+                        loadingState.put(data.get(position).getId(), LOADED);
 
                         // update view
                         notifyItemChanged(position);
                     } catch(JSONException error) {
                         // set loading state to FAILED
-                        loadingState.put(data.get(position).getId(), RecyclerViewListAdapter.FAILED);
+                        loadingState.put(data.get(position).getId(), FAILED);
 
                         // update view
                         notifyItemChanged(position);
@@ -320,7 +328,7 @@ public class RecyclerViewListAdapter extends RecyclerView.Adapter<RecyclerViewLi
                 },
                 (VolleyError error) -> {
                     API.onError(error);
-                    loadingState.put(data.get(position).getId(), RecyclerViewListAdapter.FAILED);
+                    loadingState.put(data.get(position).getId(), FAILED);
                     notifyItemChanged(position);
                 }
         );
@@ -368,7 +376,7 @@ class RecyclerViewListViewHolder extends RecyclerView.ViewHolder {
     }
 }
 
-class RecyclerViewContentViewHolder extends RecyclerViewListViewHolder {
+class RecyclerViewContentViewHolder extends RecyclerViewListViewHolder implements View.OnClickListener{
     private TextView placement;
     private TextView id;
     private TextView matchDate;
@@ -377,6 +385,8 @@ class RecyclerViewContentViewHolder extends RecyclerViewListViewHolder {
     private LinearLayout iconContainer;
     private FlexboxLayout unitsContainer;
     private FlexboxLayout traitsContainer;
+    private ConstraintLayout container;
+    private OnCardClickListener onCardClickListener;
 
     public TextView getMatchDate() {
         return matchDate;
@@ -396,6 +406,17 @@ class RecyclerViewContentViewHolder extends RecyclerViewListViewHolder {
         this.traitsContainer = itemView.findViewById(R.id.traits_container);
         this.iconContainer = itemView.findViewById(R.id.icon_container);
         this.id = itemView.findViewById(R.id.id);
+        this.container = itemView.findViewById(R.id.container);
+        this.onCardClickListener = onCardClickListener;
+        itemView.setOnClickListener(this);
+    }
+
+    public void setOnCardClickListener(OnCardClickListener onCardClickListener) {
+        this.onCardClickListener = onCardClickListener;
+    }
+
+    public ConstraintLayout getContainer() {
+        return container;
     }
 
     public TextView getStatus() {
@@ -420,6 +441,13 @@ class RecyclerViewContentViewHolder extends RecyclerViewListViewHolder {
 
     public LinearLayout getIconContainer() {
         return iconContainer;
+    }
+
+    @Override
+    public void onClick(View view) {
+        if (this.onCardClickListener != null) {
+            onCardClickListener.onClick(getAdapterPosition());
+        }
     }
 }
 
@@ -483,4 +511,8 @@ class ListHeaderData {
         DecimalFormat format = new DecimalFormat(".00");
         return summonerRankedData.getWins() + "W  " + summonerRankedData.getLosses() + "L  Win Ratio: " + format.format(winRatio) + "%";
     }
+}
+
+interface OnCardClickListener {
+    void onClick(int position);
 }
