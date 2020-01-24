@@ -122,7 +122,7 @@ class Config{
     private static HashMap<String, String> platforms;
     private static HashMap<String, String> regions;
     private static boolean init = false;
-    public static final String token = "RGAPI-748d4d8f-53b9-4fc0-a6c2-c55070059c8a";
+    public static final String token = "RGAPI-7d0de178-d376-442f-adcb-8cbbe381bd2e";
 
     public static void init() {
         if (!init) {
