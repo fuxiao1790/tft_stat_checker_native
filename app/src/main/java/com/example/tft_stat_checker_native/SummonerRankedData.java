@@ -3,6 +3,8 @@ package com.example.tft_stat_checker_native;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DecimalFormat;
+
 public class SummonerRankedData {
     private final String leagueId;
     private final String queueType;
@@ -48,6 +50,16 @@ public class SummonerRankedData {
         this.inactive = inactive;
         this.freshBlood = freshBlood;
         this.hotStreak = hotStreak;
+    }
+
+    public String getSummonerRankString() {
+        return rank + " " + tier;
+    }
+
+    public String getWinLoseWinRatioString() {
+        float winRatio = 100f * wins * 1f / ( wins * 1f + losses * 1f );
+        DecimalFormat format = new DecimalFormat(".00");
+        return wins + "W  " + losses + "L  Win Ratio: " + format.format(winRatio) + "%";
     }
 
     public String getLeagueId() {

@@ -87,6 +87,25 @@ public class API {
         return request;
     }
 
+    public static StringRequest getSummonerByPUUID(String puuid, String platform, Response.Listener<String> onSuccess, Response.ErrorListener onError) {
+        Config.init();
+        final String platformURL = Config.getPlatforms().get(platform);
+        final String route = "/tft/summoner/v1/summoners/by-puuid";
+        final String data = "/" + puuid + "?encryptedPUUID=" + puuid;
+
+        Log.d("getSummonerByPUUID", platformURL + route + data);
+        StringRequest request = new StringRequest(Request.Method.GET, platformURL + route + data, onSuccess, onError) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> headers = new HashMap<>();
+                headers.put("X-Riot-Token", Config.token);
+                return headers;
+            }
+        };
+
+        return request;
+    }
+
     public static void onError(VolleyError error) {
         Log.d("NetWork Request Failed", error.toString());
     }
@@ -122,7 +141,8 @@ class Config{
     private static HashMap<String, String> platforms;
     private static HashMap<String, String> regions;
     private static boolean init = false;
-    public static final String token = "RGAPI-7d0de178-d376-442f-adcb-8cbbe381bd2e";
+    public static final String token = "RGAPI-65f16ae3-dcbc-42b6-94d1-818f3a8c3bc7";
+    public static final String playerIconCDN = "https://ddragon.leagueoflegends.com/cdn/9.24.1/img/profileicon/";
 
     public static void init() {
         if (!init) {

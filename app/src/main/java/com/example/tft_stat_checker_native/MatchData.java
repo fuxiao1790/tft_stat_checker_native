@@ -1,15 +1,21 @@
 package com.example.tft_stat_checker_native;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class MatchData {
+public class MatchData{
     public static final int TYPE_CONTENT = 1;
     public static final int TYPE_HEADER = 2;
     public static final int TYPE_FOOTER = 3;
+
+    // original json data
+    private JSONObject json;
 
     // my data displayed on the card
     private int placement;
@@ -19,13 +25,14 @@ public class MatchData {
     private String id;
     private String loadingStatus;
 
-    // match data
+    // match data from json
     private int setNumber;
     private int queueID;
     private long gameDateTime;
     private double gameLength;
     private ArrayList<String> participantsID;
     private ArrayList<ParticipantData> participants;
+
 
     public MatchData(int placement, ArrayList<Unit> units, ArrayList<Trait> traits, int type, String id) {
         this.placement = placement;
@@ -45,9 +52,36 @@ public class MatchData {
         this.loadingStatus = "";
     }
 
+    public MatchData(JSONObject data) throws JSONException{
+        JSONObject info = data.getJSONObject("info");
+        JSONObject metadata = data.getJSONObject("metadata");
+
+        json = data;
+
+        setNumber = info.getInt("tft_set_number");
+        queueID = info.getInt("queue_id");
+        gameDateTime = info.getLong("game_datetime");
+        gameLength = info.getDouble("game_length");
+
+        JSONArray idList = metadata.getJSONArray("participants");
+        participantsID = new ArrayList<>();
+        for (int i = 0; i < idList.length(); i++) {
+            participantsID.add(idList.getString(i));
+        }
+
+        JSONArray participantsList = info.getJSONArray("participants");
+        participants = new ArrayList<>();
+        for (int i = 0; i < idList.length(); i++) {
+            ParticipantData participant = new ParticipantData(participantsList.getJSONObject(i));
+            participants.add(participant);
+        }
+    }
+
     public void loadData(JSONObject data, String puuid) throws JSONException {
         JSONObject info = data.getJSONObject("info");
         JSONObject metadata = data.getJSONObject("metadata");
+
+        json = data;
 
         setNumber = info.getInt("tft_set_number");
         queueID = info.getInt("queue_id");
@@ -73,6 +107,10 @@ public class MatchData {
         }
 
         this.loadingStatus = "LOADED";
+    }
+
+    public JSONObject getJson() {
+        return json;
     }
 
     public int getSetNumber() {
@@ -160,6 +198,9 @@ class ParticipantData {
     private ArrayList<Unit> units;
     private ArrayList<Trait> traits;
 
+    private SummonerData summonerData;
+    private SummonerRankedData summonerRankedData;
+
     public ParticipantData(JSONObject participant) throws JSONException {
         this.goldLeft = participant.getInt("gold_left");
         this.lastRound = participant.getInt("last_round");
@@ -184,6 +225,13 @@ class ParticipantData {
         this.traits.sort((Trait a, Trait b) -> b.getStyle() - a.getStyle());
     }
 
+    public void loadSummonerData(SummonerData summonerData, SummonerRankedData summonerRankedData) {
+        this.summonerData = summonerData;
+        this.summonerRankedData = summonerRankedData;
+    }
+
+    public SummonerData getSummonerData() { return summonerData; }
+    public SummonerRankedData getSummonerRankedData() { return summonerRankedData; }
     public int getGoldLeft() {
         return goldLeft;
     }

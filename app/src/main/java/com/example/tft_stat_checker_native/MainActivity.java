@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -260,7 +261,21 @@ public class MainActivity extends Activity {
         target.setVerticalScrollBarEnabled(true);
 
         targetAdapter.setOnCardClickListener((int position) -> {
-            Log.d("On Click", position + "");
+
+            switch (targetAdapter.getItemStatus(position)) {
+                case RecyclerViewListAdapter.FAILED: {
+                    targetAdapter.reLoadData(position);
+                    break;
+                }
+                case RecyclerViewListAdapter.LOADED: {
+                    //Intent viewMatchDetail = new Intent();
+                    String data = targetAdapter.getMatchDataAt(position).getJson().toString();
+                    Intent viewMatchDetail = new Intent(this, ViewMatchDetail.class);
+                    viewMatchDetail.putExtra("matchData", data);
+                    startActivity(viewMatchDetail);
+                    break;
+                }
+            }
         });
 
         if (summonerData != null && summonerRankedData != null) {

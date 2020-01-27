@@ -1,6 +1,8 @@
 package com.example.tft_stat_checker_native;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +19,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.flexbox.FlexboxLayout;
 
 import org.json.JSONException;
@@ -78,6 +82,10 @@ public class RecyclerViewListAdapter extends RecyclerView.Adapter<RecyclerViewLi
 
         // update list
         notifyItemInserted(insertIndex - 1);
+    }
+
+    public MatchData getMatchDataAt(int index) {
+        return data.get(index);
     }
 
     public void appendAllItems (ArrayList<MatchData> list) {
@@ -170,6 +178,11 @@ public class RecyclerViewListAdapter extends RecyclerView.Adapter<RecyclerViewLi
             temp.getSummonerName().setText(listHeaderData.getSummonerNameString());
             temp.getSummonerRank().setText(listHeaderData.getSummonerRankString());
             temp.getWinRate().setText(listHeaderData.getWinLoseWinRatioString());
+            temp.getSummonerIcon().setClipToOutline(true);
+            Glide.with(temp.getSummonerIcon())
+                    .load(Config.playerIconCDN + listHeaderData.getSummonerData().getProfileIconId() + ".png")
+                    .diskCacheStrategy(DiskCacheStrategy.DATA)
+                    .into(temp.getSummonerIcon());
         }
     }
 
@@ -238,11 +251,27 @@ public class RecyclerViewListAdapter extends RecyclerView.Adapter<RecyclerViewLi
         } else {
             ArrayList<ImageView> icons = new ArrayList<>();
             for (int i = 0; i < data.get(position).getUnits().size(); i++) {
+
+                // get drawable name from data
                 String drawableName = data.get(position).getUnits().get(i).getCharacterID().toLowerCase();
-                ImageView unitIcon = (ImageView) LayoutInflater.from(temp.getUnitsContainer().getContext()).inflate(R.layout.match_history_list_card_unit_icon, ((RecyclerViewContentViewHolder) holder).getUnitsContainer(), false);
+
+                // inflate the imageview
+                ImageView unitIcon = (ImageView) LayoutInflater
+                        .from(temp.getUnitsContainer().getContext())
+                        .inflate(
+                                R.layout.match_history_list_card_unit_icon,
+                                ((RecyclerViewContentViewHolder) holder).getUnitsContainer(),
+                                false
+                        );
+
+                // get resource id
                 Context ctx = unitIcon.getContext();
                 int id = ctx.getResources().getIdentifier(drawableName, "drawable", ctx.getPackageName());
+
                 unitIcon.setImageResource(id);
+                unitIcon.setClipToOutline(true);
+
+                // add border
                 switch (data.get(position).getUnits().get(i).getRarity()) {
                     case 0: { unitIcon.setBackgroundResource(R.drawable.unit_border_rarity0); break; }
                     case 1: { unitIcon.setBackgroundResource(R.drawable.unit_border_rarity1); break; }
@@ -251,7 +280,14 @@ public class RecyclerViewListAdapter extends RecyclerView.Adapter<RecyclerViewLi
                     case 4: { unitIcon.setBackgroundResource(R.drawable.unit_border_rarity4); break; }
                     case 5: { unitIcon.setBackgroundResource(R.drawable.unit_border_rarity5); break; }
                 }
-                unitIcon.setClipToOutline(true);
+
+                // add tier icons
+                switch (data.get(position).getUnits().get(i).getTier()) {
+                    case 1: { unitIcon.setForeground(ContextCompat.getDrawable(ctx, R.drawable.unit_tier1)); break; }
+                    case 2: { unitIcon.setForeground(ContextCompat.getDrawable(ctx, R.drawable.unit_tier2)); break; }
+                    case 3: { unitIcon.setForeground(ContextCompat.getDrawable(ctx, R.drawable.unit_tier3)); break; }
+                }
+
                 icons.add(unitIcon);
                 temp.getUnitsContainer().addView(unitIcon);
             }
@@ -271,22 +307,42 @@ public class RecyclerViewListAdapter extends RecyclerView.Adapter<RecyclerViewLi
             ArrayList<ImageView> icons = new ArrayList<>();
             for (int i = 0; i < data.get(position).getTraits().size(); i++) {
                 if (data.get(position).getTraits().get(i).getStyle() != 0) {
+
+                    // get drawable name from data
                     String drawableName = data.get(position).getTraits().get(i).getName().toLowerCase();
-                    ImageView traitIcon = (ImageView) LayoutInflater.from(temp.getTraitsContainer().getContext()).inflate(R.layout.match_history_list_card_trait_icon, ((RecyclerViewContentViewHolder) holder).getTraitsContainer(), false);
+
+                    // inflate the imageview
+                    ImageView traitIcon = (ImageView) LayoutInflater
+                            .from(temp.getTraitsContainer().getContext())
+                            .inflate(
+                                    R.layout.match_history_list_card_trait_icon,
+                                    ((RecyclerViewContentViewHolder) holder).getTraitsContainer(),
+                                    false
+                            );
+
+                    // get resource id
                     Context ctx = traitIcon.getContext();
                     int id = ctx.getResources().getIdentifier(drawableName, "drawable", ctx.getPackageName());
+
                     traitIcon.setImageResource(id);
+
+                    // add background
                     switch(data.get(position).getTraits().get(i).getStyle()) {
                         case 1: { traitIcon.setBackgroundResource(R.drawable.trait_bg_tier1); break; }
                         case 2: { traitIcon.setBackgroundResource(R.drawable.trait_bg_tier2); break; }
                         case 3: { traitIcon.setBackgroundResource(R.drawable.trait_bg_tier3); break; }
                     }
+
                     icons.add(traitIcon);
                     temp.getTraitsContainer().addView(traitIcon);
                 }
             }
             traitIcons.put(data.get(position).getId(), icons);
         }
+    }
+
+    public int getItemStatus(int position) {
+        return loadingState.get(data.get(position).getId());
     }
 
     public void reLoadData(int position) {
@@ -455,11 +511,17 @@ class RecyclerViewHeaderViewHolder extends RecyclerViewListViewHolder {
     private TextView summonerName;
     private TextView summonerRank;
     private TextView winRate;
+    private ImageView summonerIcon;
     public RecyclerViewHeaderViewHolder(@NonNull View itemView) {
         super(itemView);
         this.summonerName = itemView.findViewById(R.id.summoner_name);
         this.summonerRank = itemView.findViewById(R.id.summoner_rank);
         this.winRate = itemView.findViewById(R.id.win_lose_winrate);
+        this.summonerIcon = itemView.findViewById(R.id.summoner_icon);
+    }
+
+    public ImageView getSummonerIcon() {
+        return summonerIcon;
     }
 
     public TextView getSummonerName() {

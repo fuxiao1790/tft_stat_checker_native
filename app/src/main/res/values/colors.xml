@@ -2,16 +2,18 @@
 <resources>
     <color name="colorPrimary">#3A3F4A</color>
     <color name="colorPrimaryDark">#2A2F3A</color>
+    <color name="colorPrimaryDarkDark">#1F1A26</color>
     <color name="colorAccent">#CDD1C4</color>
 
     <color name="placementWin">#5C80BC</color>
     <color name="placementLost">#666666</color>
 
     <color name="textPrimary">#DDDDDD</color>
+    <color name="textHint">#666666</color>
     <color name="textSecondary">#AAAAAA</color>
     <color name="textFooters">#7D7D7D</color>
 
-    <color name="searchBarBG">#DBDAD8</color>
+    <color name="searchBarBG">#1F1A26</color>
 
     <color name="unitBorderRarity0">#808080</color>
     <color name="unitBorderRarity1">#11B288</color>
