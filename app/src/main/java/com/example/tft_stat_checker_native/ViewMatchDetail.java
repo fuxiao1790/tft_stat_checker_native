@@ -56,8 +56,9 @@ public class ViewMatchDetail extends Activity {
         if (data != null) {
             RecyclerView rv = findViewById(R.id.participant_list);
             rv.setLayoutManager(new LinearLayoutManager(this));
-            ParticipantListAdapter adapter = new ParticipantListAdapter(data.getParticipants(), requestQueue);
+            ParticipantListAdapter adapter = new ParticipantListAdapter(data.getParticipants(), requestQueue, this);
             rv.setAdapter(adapter);
+            rv.hasFixedSize();
         }
     }
 }

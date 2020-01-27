@@ -1,17 +1,21 @@
 package com.example.tft_stat_checker_native;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.ColorFilter;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
@@ -120,15 +124,13 @@ public class RecyclerViewListAdapter extends RecyclerView.Adapter<RecyclerViewLi
     }
 
     @Override
-    public RecyclerViewListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public RecyclerViewListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         switch (viewType) {
             case MatchData.TYPE_HEADER: {
-                RecyclerViewHeaderViewHolder viewHolder = new RecyclerViewHeaderViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.match_history_list_card_header, parent, false));
-                return viewHolder;
+                return new RecyclerViewHeaderViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.match_history_list_card_header, parent, false));
             }
             case MatchData.TYPE_FOOTER: {
-                RecyclerViewFooterViewHolder viewHolder = new RecyclerViewFooterViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.match_history_list_card_footer, parent, false));
-                return viewHolder;
+                return new RecyclerViewFooterViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.match_history_list_card_footer, parent, false));
             }
             default: {
                 RecyclerViewContentViewHolder viewHolder = new RecyclerViewContentViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.match_history_list_card, parent, false));
@@ -175,10 +177,9 @@ public class RecyclerViewListAdapter extends RecyclerView.Adapter<RecyclerViewLi
         } else if (holder instanceof RecyclerViewHeaderViewHolder && listHeaderData != null) {
             // render header here
             RecyclerViewHeaderViewHolder temp = (RecyclerViewHeaderViewHolder) holder;
-            temp.getSummonerName().setText(listHeaderData.getSummonerNameString());
-            temp.getSummonerRank().setText(listHeaderData.getSummonerRankString());
-            temp.getWinRate().setText(listHeaderData.getWinLoseWinRatioString());
-            temp.getSummonerIcon().setClipToOutline(true);
+            temp.getSummonerName().setText(listHeaderData.getSummonerData().getName());
+            temp.getSummonerRank().setText(listHeaderData.getSummonerRankedData().getSummonerRankString());
+            temp.getWinRate().setText(listHeaderData.getSummonerRankedData().getWinLoseWinRatioString());
             Glide.with(temp.getSummonerIcon())
                     .load(Config.playerIconCDN + listHeaderData.getSummonerData().getProfileIconId() + ".png")
                     .diskCacheStrategy(DiskCacheStrategy.DATA)
@@ -187,20 +188,24 @@ public class RecyclerViewListAdapter extends RecyclerView.Adapter<RecyclerViewLi
     }
 
     private void showLoading(RecyclerViewContentViewHolder holder) {
-        holder.getStatus().setVisibility(View.VISIBLE);
+        holder.getStatus().setVisibility(View.GONE);
         holder.getStatus().setText("LOADING");
 
-        holder.getId().setVisibility(View.INVISIBLE);
-        holder.getMatchDuration().setVisibility(View.INVISIBLE);
-        holder.getMatchDate().setVisibility(View.INVISIBLE);
-        holder.getIconContainer().setVisibility(View.INVISIBLE);
-        holder.getPlacement().setVisibility(View.INVISIBLE);
-        holder.getUnitsContainer().setVisibility(View.INVISIBLE);
-        holder.getTraitsContainer().setVisibility(View.INVISIBLE);
+        holder.getLoadingIndicator().setVisibility(View.VISIBLE);
+
+        holder.getId().setVisibility(View.GONE);
+        holder.getMatchDuration().setVisibility(View.GONE);
+        holder.getMatchDate().setVisibility(View.GONE);
+        holder.getIconContainer().setVisibility(View.GONE);
+        holder.getPlacement().setVisibility(View.GONE);
+        holder.getUnitsContainer().setVisibility(View.GONE);
+        holder.getTraitsContainer().setVisibility(View.GONE);
     }
     private void showContent(RecyclerViewContentViewHolder holder) {
         holder.getStatus().setVisibility(View.GONE);
         holder.getStatus().setText("");
+
+        holder.getLoadingIndicator().setVisibility(View.GONE);
 
         holder.getId().setVisibility(View.VISIBLE);
         holder.getMatchDuration().setVisibility(View.VISIBLE);
@@ -215,13 +220,15 @@ public class RecyclerViewListAdapter extends RecyclerView.Adapter<RecyclerViewLi
         holder.getStatus().setVisibility(View.VISIBLE);
         holder.getStatus().setText("FAILED");
 
-        holder.getId().setVisibility(View.INVISIBLE);
-        holder.getMatchDuration().setVisibility(View.INVISIBLE);
-        holder.getMatchDate().setVisibility(View.INVISIBLE);
-        holder.getIconContainer().setVisibility(View.INVISIBLE);
-        holder.getPlacement().setVisibility(View.INVISIBLE);
-        holder.getUnitsContainer().setVisibility(View.INVISIBLE);
-        holder.getTraitsContainer().setVisibility(View.INVISIBLE);
+        holder.getLoadingIndicator().setVisibility(View.GONE);
+
+        holder.getId().setVisibility(View.GONE);
+        holder.getMatchDuration().setVisibility(View.GONE);
+        holder.getMatchDate().setVisibility(View.GONE);
+        holder.getIconContainer().setVisibility(View.GONE);
+        holder.getPlacement().setVisibility(View.GONE);
+        holder.getUnitsContainer().setVisibility(View.GONE);
+        holder.getTraitsContainer().setVisibility(View.GONE);
     }
 
     private void renderContent(@NonNull RecyclerViewListViewHolder holder, int position) {
@@ -271,22 +278,33 @@ public class RecyclerViewListAdapter extends RecyclerView.Adapter<RecyclerViewLi
                 unitIcon.setImageResource(id);
                 unitIcon.setClipToOutline(true);
 
+                // background resource = corner
+                // foreground resource = bourder + dots
+
+                unitIcon.setBackgroundResource(R.drawable.unit_corner);
+
+                Drawable border = ContextCompat.getDrawable(ctx, R.drawable.unit_border_rarity0);
                 // add border
                 switch (data.get(position).getUnits().get(i).getRarity()) {
-                    case 0: { unitIcon.setBackgroundResource(R.drawable.unit_border_rarity0); break; }
-                    case 1: { unitIcon.setBackgroundResource(R.drawable.unit_border_rarity1); break; }
-                    case 2: { unitIcon.setBackgroundResource(R.drawable.unit_border_rarity2); break; }
-                    case 3: { unitIcon.setBackgroundResource(R.drawable.unit_border_rarity3); break; }
-                    case 4: { unitIcon.setBackgroundResource(R.drawable.unit_border_rarity4); break; }
-                    case 5: { unitIcon.setBackgroundResource(R.drawable.unit_border_rarity5); break; }
+                    case 0: { border = ContextCompat.getDrawable(ctx, R.drawable.unit_border_rarity0); break; }
+                    case 1: { border = ContextCompat.getDrawable(ctx, R.drawable.unit_border_rarity1); break; }
+                    case 2: { border = ContextCompat.getDrawable(ctx, R.drawable.unit_border_rarity2); break; }
+                    case 3: { border = ContextCompat.getDrawable(ctx, R.drawable.unit_border_rarity3); break; }
+                    case 4: { border = ContextCompat.getDrawable(ctx, R.drawable.unit_border_rarity4); break; }
+                    case 5: { border = ContextCompat.getDrawable(ctx, R.drawable.unit_border_rarity5); break; }
                 }
 
+                Drawable tier = ContextCompat.getDrawable(ctx, R.drawable.unit_tier1);
                 // add tier icons
                 switch (data.get(position).getUnits().get(i).getTier()) {
-                    case 1: { unitIcon.setForeground(ContextCompat.getDrawable(ctx, R.drawable.unit_tier1)); break; }
-                    case 2: { unitIcon.setForeground(ContextCompat.getDrawable(ctx, R.drawable.unit_tier2)); break; }
-                    case 3: { unitIcon.setForeground(ContextCompat.getDrawable(ctx, R.drawable.unit_tier3)); break; }
+                    case 1: { tier = ContextCompat.getDrawable(ctx, R.drawable.unit_tier1); break; }
+                    case 2: { tier = ContextCompat.getDrawable(ctx, R.drawable.unit_tier2); break; }
+                    case 3: { tier = ContextCompat.getDrawable(ctx, R.drawable.unit_tier3); break; }
                 }
+
+                LayerDrawable combined = new LayerDrawable(new Drawable[]{border, tier});
+
+                unitIcon.setForeground(combined);
 
                 icons.add(unitIcon);
                 temp.getUnitsContainer().addView(unitIcon);
@@ -331,6 +349,7 @@ public class RecyclerViewListAdapter extends RecyclerView.Adapter<RecyclerViewLi
                         case 1: { traitIcon.setBackgroundResource(R.drawable.trait_bg_tier1); break; }
                         case 2: { traitIcon.setBackgroundResource(R.drawable.trait_bg_tier2); break; }
                         case 3: { traitIcon.setBackgroundResource(R.drawable.trait_bg_tier3); break; }
+                        case 4: { traitIcon.setBackgroundResource(R.drawable.trait_bg_tier3); break; }
                     }
 
                     icons.add(traitIcon);
@@ -443,6 +462,7 @@ class RecyclerViewContentViewHolder extends RecyclerViewListViewHolder implement
     private FlexboxLayout traitsContainer;
     private ConstraintLayout container;
     private OnCardClickListener onCardClickListener;
+    private ProgressBar loadingIndicator;
 
     public TextView getMatchDate() {
         return matchDate;
@@ -463,12 +483,17 @@ class RecyclerViewContentViewHolder extends RecyclerViewListViewHolder implement
         this.iconContainer = itemView.findViewById(R.id.icon_container);
         this.id = itemView.findViewById(R.id.id);
         this.container = itemView.findViewById(R.id.container);
+        this.loadingIndicator = itemView.findViewById(R.id.loading_indicator);
         this.onCardClickListener = onCardClickListener;
         itemView.setOnClickListener(this);
     }
 
     public void setOnCardClickListener(OnCardClickListener onCardClickListener) {
         this.onCardClickListener = onCardClickListener;
+    }
+
+    public ProgressBar getLoadingIndicator() {
+        return loadingIndicator;
     }
 
     public ConstraintLayout getContainer() {
@@ -558,20 +583,6 @@ class ListHeaderData {
     public ListHeaderData(SummonerData summonerData, SummonerRankedData summonerRankedData) {
         this.summonerData = summonerData;
         this.summonerRankedData = summonerRankedData;
-    }
-
-    public String getSummonerNameString() {
-        return summonerData.getName();
-    }
-
-    public String getSummonerRankString() {
-        return summonerRankedData.getTier() + " " + summonerRankedData.getRank();
-    }
-
-    public String getWinLoseWinRatioString() {
-        float winRatio = 100f * summonerRankedData.getWins() * 1f / ( summonerRankedData.getWins() * 1f + summonerRankedData.getLosses() * 1f );
-        DecimalFormat format = new DecimalFormat(".00");
-        return summonerRankedData.getWins() + "W  " + summonerRankedData.getLosses() + "L  Win Ratio: " + format.format(winRatio) + "%";
     }
 }
 

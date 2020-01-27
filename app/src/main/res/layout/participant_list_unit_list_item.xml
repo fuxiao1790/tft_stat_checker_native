@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="wrap_content"
+    android:layout_width="84dp"
+    android:layout_marginHorizontal="4dp"
+    xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <ImageView
+        android:id="@+id/unit_icon"
+        android:layout_width="match_parent"
+        android:layout_height="84dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:adjustViewBounds="true"
+        android:scaleType="fitXY"
+        android:src="@drawable/tft2_aatrox"
+        />
+
+    <com.google.android.flexbox.FlexboxLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:flexDirection="row"
+        app:justifyContent="space_evenly"
+        app:layout_constraintTop_toBottomOf="@+id/unit_icon"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        >
+
+        <ImageView
+            android:id="@+id/item_1"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginTop="4dp"
+            android:adjustViewBounds="true"
+            android:background="@drawable/unit_corner"
+            android:foreground="@drawable/unit_border_rarity0"
+            android:scaleType="fitXY"
+            android:src="@drawable/tft2_aatrox"/>
+
+        <ImageView
+            android:id="@+id/item_2"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginTop="4dp"
+            android:adjustViewBounds="true"
+            android:background="@drawable/unit_corner"
+            android:foreground="@drawable/unit_border_rarity0"
+            android:scaleType="fitXY"
+            android:src="@drawable/tft2_aatrox"/>
+
+        <ImageView
+            android:id="@+id/item_3"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginTop="4dp"
+            android:adjustViewBounds="true"
+            android:background="@drawable/unit_corner"
+            android:foreground="@drawable/unit_border_rarity0"
+            android:scaleType="fitXY"
+            android:src="@drawable/tft2_aatrox"/>
+
+    </com.google.android.flexbox.FlexboxLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -98,12 +99,12 @@ public class MainActivity extends Activity {
     }
 
     public void showLoading() {
-        TextView loadingIndicator = findViewById(R.id.loading_indicator);
+        ProgressBar loadingIndicator = findViewById(R.id.loading_indicator);
         loadingIndicator.setVisibility(View.VISIBLE);
     }
 
     public void hideLoading() {
-        TextView loadingIndicator = findViewById(R.id.loading_indicator);
+        ProgressBar loadingIndicator = findViewById(R.id.loading_indicator);
         loadingIndicator.setVisibility(View.INVISIBLE);
     }
 
