@@ -25,7 +25,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="4dp"
         android:text="summoner_rank"
         android:textColor="@color/textPrimary"
         android:textSize="16dp"
@@ -37,7 +37,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="4dp"
         android:text="win_lose_winrate"
         android:textColor="@color/textPrimary"
         android:textSize="16dp"
@@ -61,8 +61,8 @@
 
     <ImageView
         android:id="@+id/summoner_icon"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:adjustViewBounds="true"
@@ -72,5 +72,38 @@
         app:layout_constraintBottom_toBottomOf="@+id/win_lose_winrate"
         app:layout_constraintStart_toEndOf="@+id/placement"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ProgressBar
+        android:id="@+id/loading_indicator"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/win_lose_winrate"
+        app:layout_constraintEnd_toEndOf="@+id/summoner_name"
+        app:layout_constraintStart_toStartOf="@+id/summoner_name"
+        app:layout_constraintTop_toTopOf="@+id/summoner_name" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/unit_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/win_lose_winrate" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/trait_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/unit_list" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

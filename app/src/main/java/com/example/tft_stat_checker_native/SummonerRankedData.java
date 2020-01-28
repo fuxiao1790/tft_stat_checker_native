@@ -52,9 +52,7 @@ public class SummonerRankedData {
         this.hotStreak = hotStreak;
     }
 
-    public String getSummonerRankString() {
-        return rank + " " + tier;
-    }
+    public String getSummonerRankString() { return tier + " " + rank + " " + leaguePoints + "LP"; }
 
     public String getWinLoseWinRatioString() {
         float winRatio = 100f * wins * 1f / ( wins * 1f + losses * 1f );
