@@ -181,6 +181,7 @@ public class RecyclerViewListAdapter extends RecyclerView.Adapter<RecyclerViewLi
             temp.getSummonerName().setText(listHeaderData.getSummonerData().getName());
             temp.getSummonerRank().setText(listHeaderData.getSummonerRankedData().getSummonerRankString());
             temp.getWinRate().setText(listHeaderData.getSummonerRankedData().getWinLoseWinRatioString());
+            temp.getQueueType().setText(listHeaderData.getSummonerRankedData().getQueueType());
             Glide.with(temp.getSummonerIcon())
                     .load(Config.playerIconCDN + listHeaderData.getSummonerData().getProfileIconId() + ".png")
                     .diskCacheStrategy(DiskCacheStrategy.DATA)
@@ -516,14 +517,18 @@ class RecyclerViewHeaderViewHolder extends RecyclerViewListViewHolder {
     private TextView summonerRank;
     private TextView winRate;
     private ImageView summonerIcon;
+    private TextView queueType;
     public RecyclerViewHeaderViewHolder(@NonNull View itemView) {
         super(itemView);
         this.summonerName = itemView.findViewById(R.id.summoner_name);
         this.summonerRank = itemView.findViewById(R.id.summoner_rank);
         this.winRate = itemView.findViewById(R.id.win_lose_winrate);
+        this.queueType = itemView.findViewById(R.id.queue_type);
         this.summonerIcon = itemView.findViewById(R.id.summoner_icon);
         this.summonerIcon.setClipToOutline(true);
     }
+
+    public TextView getQueueType() { return queueType; }
 
     public ImageView getSummonerIcon() {
         return summonerIcon;
