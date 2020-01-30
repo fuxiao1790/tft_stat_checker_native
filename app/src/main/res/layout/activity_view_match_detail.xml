@@ -5,17 +5,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ViewMatchDetail"
-    android:background="@color/colorPrimary"
+    android:background="@color/colorPrimaryDark"
     >
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimaryDarkDark"
+        android:background="@color/colorHeader"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        android:elevation="5dp"
+        >
 
         <TextView
             android:id="@+id/tab_title"
@@ -35,7 +37,7 @@
             android:id="@+id/back_button"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:backgroundTint="@color/colorPrimaryDarkDark"
+            android:backgroundTint="@color/colorPrimaryDark"
             android:text="Back"
             android:textColor="@color/textPrimary"
             app:layout_constraintBottom_toBottomOf="parent"

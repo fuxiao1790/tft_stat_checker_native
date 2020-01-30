@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="4dp"
-    android:background="@color/colorPrimaryDark"
+    android:background="@drawable/click_ripple_bg"
     android:minHeight="105dp"
     android:id="@+id/container">
 
@@ -18,11 +17,10 @@
         android:textAlignment="center"
         android:textColor="@color/textPrimary"
         android:textSize="32dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         android:visibility="invisible"
-        />
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/id"
@@ -45,10 +43,9 @@
         android:layout_marginBottom="2dp"
         android:text="match date"
         android:textColor="@color/textFooters"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         android:visibility="invisible"
-        />
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <TextView
         android:id="@+id/match_duration"
@@ -58,10 +55,9 @@
         android:layout_marginBottom="2dp"
         android:text="match_duration"
         android:textColor="@color/textFooters"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/placement"
         android:visibility="invisible"
-        />
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        app:layout_constraintStart_toEndOf="@+id/placement" />
 
     <TextView
         android:id="@+id/status"
@@ -71,11 +67,10 @@
         android:textColor="@color/textPrimary"
         android:textSize="36dp"
         android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ProgressBar
         android:layout_width="wrap_content"
@@ -87,38 +82,45 @@
         android:id="@+id/loading_indicator" />
 
     <LinearLayout
-        android:id="@+id/icon_container"
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:background="@color/colorPrimaryLight"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <com.google.android.flexbox.FlexboxLayout
+        android:id="@+id/units_container"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:orientation="vertical"
-        android:paddingTop="8dp"
-        android:paddingBottom="4dp"
-        app:layout_constraintBottom_toTopOf="@+id/match_duration"
+        android:minHeight="16dp"
+        app:flexDirection="row"
+        app:flexWrap="wrap"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/placement"
-        app:layout_constraintTop_toBottomOf="@+id/id"
-        android:visibility="invisible">
+        app:layout_constraintTop_toBottomOf="@+id/id">
+    </com.google.android.flexbox.FlexboxLayout>
 
-        <com.google.android.flexbox.FlexboxLayout
-            android:id="@+id/units_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
-            android:minHeight="16dp"
-            app:flexDirection="row"
-            app:flexWrap="wrap"></com.google.android.flexbox.FlexboxLayout>
-
-        <com.google.android.flexbox.FlexboxLayout
-            android:id="@+id/traits_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="16dp"
-            android:orientation="horizontal"
-            app:flexDirection="row"
-            app:flexWrap="wrap"></com.google.android.flexbox.FlexboxLayout>
-
-    </LinearLayout>
+    <com.google.android.flexbox.FlexboxLayout
+        android:id="@+id/traits_container"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="8dp"
+        android:minHeight="16dp"
+        android:orientation="horizontal"
+        app:flexDirection="row"
+        app:flexWrap="wrap"
+        app:layout_constraintBottom_toTopOf="@+id/match_date"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/placement"
+        app:layout_constraintTop_toBottomOf="@+id/units_container">
+    </com.google.android.flexbox.FlexboxLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

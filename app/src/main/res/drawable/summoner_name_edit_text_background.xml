@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <solid android:color="@color/searchBarBG"/>
+    <solid android:color="@color/colorPrimaryLight"/>
     <corners android:radius="50dp"/>
-    <padding android:left="25sp" android:top="10dp" android:right="25sp" android:bottom="10dp" />
+    <padding android:left="24sp" android:top="6dp" android:right="8dp" android:bottom="6dp" />
 </shape>

@@ -8,4 +8,6 @@
 
     <dimen name="unit_icon_border_radius">4dp</dimen>
     <dimen name="trait_icon_border_radius">4dp</dimen>
+
+    <dimen name="item_icon_border_radius">2dp</dimen>
 </resources>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:layout_height="wrap_content"
+    android:layout_width="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="DIALOG"
+        />
+
+    <androidx.recyclerview.widget.RecyclerView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="300dp"
+        android:layout_height="400dp"
+        android:id="@+id/region_list"
+        xmlns:aapt="http://schemas.android.com/aapt"
+        >
+        <aapt:attr name="android:background" >
+            <shape xmlns:android="http://schemas.android.com/apk/res/android">
+                <solid android:color="@color/colorPrimary"/>
+                <corners android:radius="50dp"/>
+            </shape>
+        </aapt:attr>
+    </androidx.recyclerview.widget.RecyclerView>
+</LinearLayout>

@@ -8,6 +8,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class MatchData{
     public static final int TYPE_CONTENT = 1;
@@ -135,6 +136,36 @@ public class MatchData{
 
     public double getGameLength() {
         return gameLength;
+    }
+
+    public String getGameDateTimeString() {
+        Date date = new Date(gameDateTime);
+        Date now = new Date();
+
+        long diff = now.getTime() - date.getTime();
+        long diffInSec = diff / 1000;
+        if (diffInSec < 30) {
+            return "less than a minute ago";
+        } else if (diffInSec < 90) {
+            return "a minute ago";
+        } else if (diffInSec < 2670) {
+            return diffInSec / 60 + " minutes ago";
+        } else if (diffInSec < 5370) {
+            return "about an hour ago";
+        } else if (diffInSec < 86370) {
+            return "about " + diffInSec / 3600 + " hours ago";
+        } else if (diffInSec < 151170) {
+            return "about a day ago";
+        } else if (diffInSec < 2591970) {
+            return diffInSec / 86400 + " days ago";
+        } else {
+            return "more than a month ago";
+        }
+    }
+
+    public String getGameLengthString() {
+        int durationInSecs = (int) gameLength;
+        return durationInSecs / 60 + " minutes";
     }
 
     public ArrayList<String> getParticipantsID() {

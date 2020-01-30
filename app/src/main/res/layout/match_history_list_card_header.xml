@@ -5,60 +5,67 @@
     android:layout_width="match_parent"
     android:paddingTop="60dp"
     android:background="@color/colorPrimaryDark"
-    android:layout_marginBottom="6dp"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <TextView
         android:id="@+id/summoner_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:text="SummonerName"
         android:textColor="@color/textPrimary"
-        android:textSize="36dp"
-        app:layout_constraintStart_toEndOf="@+id/summoner_icon"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/summoner_icon" />
 
     <TextView
         android:id="@+id/summoner_rank"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:text="Summoner Rank"
         android:textColor="@color/textSecondary"
         android:textSize="16dp"
-        app:layout_constraintStart_toEndOf="@+id/summoner_icon"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/summoner_name" />
 
     <TextView
         android:id="@+id/win_lose_winrate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="16dp"
+        android:background="@drawable/summoner_icon_bg"
+        android:outlineProvider="background"
         android:text="win / lose / winrate"
         android:textColor="@color/textSecondary"
         android:textSize="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/summoner_icon"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/summoner_rank" />
 
     <ImageView
         android:id="@+id/summoner_icon"
-        android:layout_width="72dp"
-        android:layout_height="72dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="16dp"
+        android:layout_width="88dp"
+        android:layout_height="88dp"
+        android:layout_marginTop="24dp"
         android:adjustViewBounds="true"
         android:background="@drawable/summoner_icon_bg"
         android:outlineProvider="background"
         android:scaleType="fitXY"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <LinearLayout
+        android:id="@+id/linearLayout3"
+        android:layout_width="match_parent"
+        android:layout_height="6dp"
+        android:background="@color/colorPrimaryLight"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

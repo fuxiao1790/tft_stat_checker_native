@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="colorPrimaryLight">#4A4F5A</color>
     <color name="colorPrimary">#3A3F4A</color>
+    <color name="colorHeader">#2A2F3A </color>
     <color name="colorPrimaryDark">#2A2F3A</color>
     <color name="colorPrimaryDarkDark">#1F1A26</color>
     <color name="colorAccent">#CDD1C4</color>
+
+    <color name="colorOnClickRipple">#5A5F6A</color>
 
     <color name="placementWin">#5C80BC</color>
     <color name="placementLost">#666666</color>
@@ -15,12 +19,16 @@
 
     <color name="searchBarBG">#1F1A26</color>
 
+    <color name="changeRegionButtonBG">#2A2F3A</color>
+
     <color name="unitBorderRarity0">#808080</color>
     <color name="unitBorderRarity1">#11B288</color>
     <color name="unitBorderRarity2">#207AC7</color>
     <color name="unitBorderRarity3">#C440DA</color>
     <color name="unitBorderRarity4">#FFB93B</color>
     <color name="unitBorderRarity5">#FFFFFF</color>
+
+    <color name="itemBorder">#11B288</color>
 
     <color name="traitBGTier1Start">#a1785d</color>
     <color name="traitBGTier1End">#CA9372</color>

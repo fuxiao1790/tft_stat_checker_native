@@ -1,18 +1,23 @@
 package com.example.tft_stat_checker_native;
 
+import androidx.appcompat.widget.PopupMenu;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -38,6 +43,9 @@ public class MainActivity extends Activity {
     String searchTarget = "";
     String platform = "";
 
+    String currentSearchTarget = "";
+    String currentPlatform = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         requestQueue = Volley.newRequestQueue(this);
@@ -49,6 +57,7 @@ public class MainActivity extends Activity {
         iniSearchBar();
         iniSwipeRefresh();
         iniKeyboard();
+        iniChangeRegionButton();
     }
 
     public void iniKeyboard() {
@@ -95,6 +104,18 @@ public class MainActivity extends Activity {
             SwipeRefreshLayout layout = findViewById(R.id.match_history_card_list_container);
             layout.setProgressViewOffset(true, start, start + 200);
             layout.setDistanceToTriggerSync(300);
+        });
+    }
+
+    public void iniChangeRegionButton() {
+        Button changeRegionButton = findViewById(R.id.change_region_button);
+        changeRegionButton.setOnClickListener((view) -> {
+            ChangeRegionDialog dialog = new ChangeRegionDialog(this, this.platform);
+            dialog.setOnDismissListener((arg) -> {
+                this.platform = dialog.getSelectedPlatform();
+                Log.d("selected platform", this.platform);
+            });
+            dialog.show();
         });
     }
 
@@ -162,7 +183,6 @@ public class MainActivity extends Activity {
                 id,
                 platform,
                 (String res) -> {
-                    hideLoading();
                     // received data close queue
                     Log.d("getSummonerRankedData", res);
                     try {
@@ -214,6 +234,7 @@ public class MainActivity extends Activity {
                         // set loading indicator
                         SwipeRefreshLayout layout = findViewById(R.id.match_history_card_list_container);
                         layout.setRefreshing(false);
+                        hideLoading();
 
                     } catch (JSONException error) {
                         Log.d("fetchMatchHistoryList", "Bad Response(Malformed JSON response): " + error.toString());
@@ -253,9 +274,10 @@ public class MainActivity extends Activity {
         target.hasFixedSize();
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setInitialPrefetchItemCount(10);
         target.setLayoutManager(layoutManager);
 
-        RecyclerViewListAdapter targetAdapter =  new RecyclerViewListAdapter(this.requestQueue);
+        RecyclerViewListAdapter targetAdapter =  new RecyclerViewListAdapter(this, this.requestQueue);
 
         target.setAdapter(targetAdapter);
 

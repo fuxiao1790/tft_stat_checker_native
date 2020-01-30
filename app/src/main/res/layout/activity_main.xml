@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="@color/colorPrimary"
+    android:background="@color/colorPrimaryDark"
     android:focusable="true"
     android:focusableInTouchMode="true"
     android:id="@+id/root_view"
@@ -17,18 +17,18 @@
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        >
+        app:layout_constraintVertical_bias="0.0">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/match_history_card_list"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginTop="1dp"
-            android:background="@color/colorPrimary"
-            android:verticalScrollbarPosition="right"
-            />
+            android:background="@color/colorPrimaryDark"
+            android:verticalScrollbarPosition="right" />
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
@@ -43,37 +43,73 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <LinearLayout
-        android:id="@+id/linearLayout"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/search_bar_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:background="@drawable/summoner_name_edit_text_background"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        android:elevation="10dp"
+        xmlns:aapt="http://schemas.android.com/aapt"
+        >
+        <aapt:attr name="android:background" >
+            <shape xmlns:android="http://schemas.android.com/apk/res/android">
+                <solid android:color="@color/colorPrimaryLight"/>
+                <corners android:radius="50dp"/>
+                <padding android:left="24sp" android:top="6dp" android:right="8dp" android:bottom="6dp" />
+            </shape>
+        </aapt:attr>
+
 
         <EditText
             android:id="@+id/searchText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="0dp"
-            android:layout_marginTop="0dp"
-            android:layout_marginEnd="0dp"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_toStartOf="@+id/change_region_button"
             android:background="@null"
             android:contentDescription="summoner name"
             android:cursorVisible="true"
             android:hint="Summoner Name"
-            android:textColorHint="@color/textHint"
             android:imeOptions="actionSearch"
             android:inputType="text"
             android:selectAllOnFocus="true"
             android:singleLine="true"
-            android:textColor="@color/textPrimary" />
-    </LinearLayout>
+            android:textColor="@color/textPrimary"
+            android:textColorHint="@color/textHint"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/change_region_button"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/change_region_button"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:padding="0dp"
+            android:text="NA"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            android:textColor="@color/textPrimary"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            xmlns:aapt="http://schemas.android.com/aapt"
+            >
+            <aapt:attr name="android:background" >
+                <shape xmlns:android="http://schemas.android.com/apk/res/android">
+                    <solid android:color="@color/changeRegionButtonBG"/>
+                    <corners android:radius="50dp"/>
+                    <padding android:left="16dp" android:top="16dp" android:right="16dp" android:bottom="16dp" />
+                </shape>
+            </aapt:attr>
+        </Button>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ProgressBar
         android:id="@+id/loading_indicator"
@@ -83,6 +119,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/match_history_card_list_container"
         app:layout_constraintEnd_toEndOf="@+id/match_history_card_list_container"
         app:layout_constraintStart_toStartOf="@+id/match_history_card_list_container"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+        app:layout_constraintTop_toTopOf="@+id/match_history_card_list_container" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
