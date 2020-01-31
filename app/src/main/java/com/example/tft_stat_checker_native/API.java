@@ -141,7 +141,7 @@ class Config{
     private static HashMap<String, String> platforms;
     private static HashMap<String, String> regions;
     private static boolean init = false;
-    public static final String token = "RGAPI-9713f87a-1ccb-4705-b17d-ae8e4f797c5b";
+    public static final String token = "RGAPI-11545f51-510a-4a10-833f-89e9100670cf";
     public static final String playerIconCDN = "https://ddragon.leagueoflegends.com/cdn/9.24.1/img/profileicon/";
 
     public static void init() {

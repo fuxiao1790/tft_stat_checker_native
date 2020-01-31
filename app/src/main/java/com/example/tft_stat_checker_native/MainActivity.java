@@ -144,7 +144,7 @@ public class MainActivity extends Activity {
         clearData();
         showLoading();
         fetchSummonerData(searchTarget, "NA");
-        addSearchHistory(searchTarget);
+        //addSearchHistory(searchTarget);
     }
 
     public void clearData() {
@@ -347,10 +347,14 @@ public class MainActivity extends Activity {
             searchText.clearFocus();
             return true;
         });
+
+        searchText.setOnFocusChangeListener((view, focus) -> { if (focus) { searchText.showDropDown(); } });
+
         ArrayList<String> autoCompleteNameList = new ArrayList<>();
         this.searchHistory.forEach((name) -> autoCompleteNameList.add(name));
-        AutoCompleteArrayAdapter adapter = new AutoCompleteArrayAdapter(this, autoCompleteNameList);
-        searchText.setAdapter(adapter);
+
+        ArrayAdapter<String> names = new ArrayAdapter<>(this, R.layout.auto_complete_item, autoCompleteNameList);
+        searchText.setAdapter(names);
     }
 
     public void hideSoftKeyboard() {
