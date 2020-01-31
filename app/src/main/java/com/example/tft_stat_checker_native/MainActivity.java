@@ -9,6 +9,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -17,6 +18,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -33,6 +36,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 public class MainActivity extends Activity {
 
     RequestQueue requestQueue;
@@ -46,8 +55,12 @@ public class MainActivity extends Activity {
     String currentSearchTarget = "";
     String currentPlatform = "";
 
+    HashSet<String> searchHistory;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        readSearchHistory();
+
         requestQueue = Volley.newRequestQueue(this);
 
         super.onCreate(savedInstanceState);
@@ -68,13 +81,11 @@ public class MainActivity extends Activity {
     public void setupUI(View view) {
         // Set up touch listener for non-text box views to hide keyboard.
         if (!(view instanceof EditText)) {
-            view.setOnTouchListener(new View.OnTouchListener() {
-                public boolean onTouch(View v, MotionEvent event) {
-                    TextView searchText = findViewById(R.id.searchText);
-                    hideSoftKeyboard();
-                    searchText.clearFocus();
-                    return false;
-                }
+            view.setOnTouchListener((View v, MotionEvent event) -> {
+                TextView searchText = findViewById(R.id.searchText);
+                hideSoftKeyboard();
+                searchText.clearFocus();
+                return false;
             });
         }
 
@@ -133,6 +144,7 @@ public class MainActivity extends Activity {
         clearData();
         showLoading();
         fetchSummonerData(searchTarget, "NA");
+        addSearchHistory(searchTarget);
     }
 
     public void clearData() {
@@ -310,8 +322,24 @@ public class MainActivity extends Activity {
         }
     }
 
+    private void addSearchHistory(String s) {
+        SharedPreferences sharedPreferences = getSharedPreferences("storage", MODE_PRIVATE);
+        searchHistory.add(s);
+        sharedPreferences.edit().putStringSet("searchHistory", searchHistory).commit();
+        AutoCompleteTextView searchText = findViewById(R.id.searchText);
+        AutoCompleteArrayAdapter adapter = (AutoCompleteArrayAdapter) searchText.getAdapter();
+        adapter.addItem(s);
+    }
+
+    private void readSearchHistory() {
+        SharedPreferences sharedPreferences = getSharedPreferences("storage", MODE_PRIVATE);
+        Set<String> data = sharedPreferences.getStringSet("searchHistory", new HashSet<String>());
+        this.searchHistory = new HashSet<>();
+        data.forEach((searchItem) -> searchHistory.add(searchItem));
+    }
+
     private void iniSearchBar() {
-        EditText searchText = findViewById(R.id.searchText);
+        AutoCompleteTextView searchText = findViewById(R.id.searchText);
         searchText.setOnEditorActionListener((TextView v, int actionID, KeyEvent evt) -> {
             searchTarget = searchText.getText().toString();
             refreshData();
@@ -319,6 +347,10 @@ public class MainActivity extends Activity {
             searchText.clearFocus();
             return true;
         });
+        ArrayList<String> autoCompleteNameList = new ArrayList<>();
+        this.searchHistory.forEach((name) -> autoCompleteNameList.add(name));
+        AutoCompleteArrayAdapter adapter = new AutoCompleteArrayAdapter(this, autoCompleteNameList);
+        searchText.setAdapter(adapter);
     }
 
     public void hideSoftKeyboard() {

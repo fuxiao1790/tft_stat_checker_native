@@ -190,23 +190,23 @@ public class RecyclerViewListAdapter extends RecyclerView.Adapter<RecyclerViewLi
     }
 
     private void showLoading(RecyclerViewContentViewHolder holder) {
-        holder.getStatus().setVisibility(View.GONE);
+        holder.getStatus().setVisibility(View.INVISIBLE);
         holder.getStatus().setText("LOADING");
 
         holder.getLoadingIndicator().setVisibility(View.VISIBLE);
 
         holder.getId().setVisibility(View.GONE);
-        holder.getMatchDuration().setVisibility(View.GONE);
-        holder.getMatchDate().setVisibility(View.GONE);
-        holder.getPlacement().setVisibility(View.GONE);
-        holder.getUnitsContainer().setVisibility(View.GONE);
-        holder.getTraitsContainer().setVisibility(View.GONE);
+        holder.getMatchDuration().setVisibility(View.INVISIBLE);
+        holder.getMatchDate().setVisibility(View.INVISIBLE);
+        holder.getPlacement().setVisibility(View.INVISIBLE);
+        holder.getUnitsContainer().setVisibility(View.INVISIBLE);
+        holder.getTraitsContainer().setVisibility(View.INVISIBLE);
     }
     private void showContent(RecyclerViewContentViewHolder holder) {
-        holder.getStatus().setVisibility(View.GONE);
+        holder.getStatus().setVisibility(View.INVISIBLE);
         holder.getStatus().setText("");
 
-        holder.getLoadingIndicator().setVisibility(View.GONE);
+        holder.getLoadingIndicator().setVisibility(View.INVISIBLE);
 
         holder.getId().setVisibility(View.VISIBLE);
         holder.getMatchDuration().setVisibility(View.VISIBLE);
@@ -220,14 +220,14 @@ public class RecyclerViewListAdapter extends RecyclerView.Adapter<RecyclerViewLi
         holder.getStatus().setVisibility(View.VISIBLE);
         holder.getStatus().setText("FAILED");
 
-        holder.getLoadingIndicator().setVisibility(View.GONE);
+        holder.getLoadingIndicator().setVisibility(View.INVISIBLE);
 
-        holder.getId().setVisibility(View.GONE);
-        holder.getMatchDuration().setVisibility(View.GONE);
-        holder.getMatchDate().setVisibility(View.GONE);
-        holder.getPlacement().setVisibility(View.GONE);
-        holder.getUnitsContainer().setVisibility(View.GONE);
-        holder.getTraitsContainer().setVisibility(View.GONE);
+        holder.getId().setVisibility(View.INVISIBLE);
+        holder.getMatchDuration().setVisibility(View.INVISIBLE);
+        holder.getMatchDate().setVisibility(View.INVISIBLE);
+        holder.getPlacement().setVisibility(View.INVISIBLE);
+        holder.getUnitsContainer().setVisibility(View.INVISIBLE);
+        holder.getTraitsContainer().setVisibility(View.INVISIBLE);
     }
 
     private void renderContent(@NonNull RecyclerViewListViewHolder holder, int position) {
