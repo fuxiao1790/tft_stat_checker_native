@@ -40,6 +40,8 @@ public class ParticipantListAdapter extends RecyclerView.Adapter<ParticipantsVie
     private HashMap<String, Integer> loadingStatus;
     private RequestQueue requestQueue;
 
+    private String platform;
+
     public ParticipantListAdapter(@NonNull ArrayList<ParticipantData> listData, RequestQueue requestQueue, Context ctx) {
         this.listData = listData;
         this.requestQueue = requestQueue;
@@ -55,6 +57,10 @@ public class ParticipantListAdapter extends RecyclerView.Adapter<ParticipantsVie
             loadingStatus.put(participantData.getPuuid(), NONE);
         });
 
+    }
+
+    public void setPlatform(String platform) {
+        this.platform = platform;
     }
 
     private ArrayList<Trait> filterTraits(ArrayList<Trait> list) {
@@ -99,7 +105,7 @@ public class ParticipantListAdapter extends RecyclerView.Adapter<ParticipantsVie
         String puuid = listData.get(position).getPuuid();
         StringRequest req = API.getSummonerByPUUID(
                 puuid,
-                "NA",
+                this.platform,
                 (String res) -> {
                     try {
                         JSONObject json = new JSONObject(res);
@@ -124,7 +130,7 @@ public class ParticipantListAdapter extends RecyclerView.Adapter<ParticipantsVie
     private void getSummonerRankedData(SummonerData summonerData, int position) {
         StringRequest req = API.getSummonerRankedData(
                 summonerData.getId(),
-                "NA",
+                this.platform,
                 (String res) -> {
                     try {
                         JSONArray obj = new JSONArray(res);

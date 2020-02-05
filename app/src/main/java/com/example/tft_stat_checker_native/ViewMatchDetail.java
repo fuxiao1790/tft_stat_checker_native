@@ -20,6 +20,7 @@ public class ViewMatchDetail extends Activity {
 
     MatchData data;
     RequestQueue requestQueue;
+    String platform;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +42,7 @@ public class ViewMatchDetail extends Activity {
     public void iniMatchData() {
         Bundle bundle = getIntent().getExtras();
         String message = bundle.getString("matchData");
+        this.platform = bundle.getString("platform");
         Log.d("JSON", message);
         try {
             JSONObject json = new JSONObject(message);
@@ -57,6 +59,7 @@ public class ViewMatchDetail extends Activity {
             RecyclerView rv = findViewById(R.id.participant_list);
             rv.setLayoutManager(new LinearLayoutManager(this));
             ParticipantListAdapter adapter = new ParticipantListAdapter(data.getParticipants(), requestQueue, this);
+            adapter.setPlatform(this.platform);
             rv.setAdapter(adapter);
             rv.hasFixedSize();
         }

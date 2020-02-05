@@ -104,15 +104,16 @@ public class RecyclerViewListAdapter extends RecyclerView.Adapter<RecyclerViewLi
         notifyItemRangeInserted(insertIndex - 1, list.size());
     }
 
-    public void removeAllItems () {
+    public void removeAllItems() {
         for (int i = data.size() - 1; i > -1; i--) {
             if (data.get(i).getType() != MatchData.TYPE_HEADER && data.get(i).getType() != MatchData.TYPE_FOOTER) {
                 data.remove(i);
             }
         }
-        loadingState.clear();
-        unitIconsStorage.clear();
-        traitIconsStorage.clear();
+        this.listHeaderData = null;
+        this.loadingState.clear();
+        this.unitIconsStorage.clear();
+        this.traitIconsStorage.clear();
         notifyDataSetChanged();
     }
 
@@ -175,7 +176,7 @@ public class RecyclerViewListAdapter extends RecyclerView.Adapter<RecyclerViewLi
                     break;
                 }
             }
-        } else if (holder instanceof RecyclerViewHeaderViewHolder && listHeaderData != null) {
+        } else if (holder instanceof RecyclerViewHeaderViewHolder && this.listHeaderData != null) {
             // render header here
             RecyclerViewHeaderViewHolder temp = (RecyclerViewHeaderViewHolder) holder;
             temp.getSummonerName().setText(listHeaderData.getSummonerData().getName());

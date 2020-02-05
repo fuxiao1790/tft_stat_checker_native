@@ -4,7 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingVertical="8dp"
-    android:background="@drawable/click_ripple_bg">
+    android:background="@drawable/click_ripple_bg"
+    android:id="@+id/region_list_item_container"
+    >
 
     <TextView
         android:id="@+id/region_text"

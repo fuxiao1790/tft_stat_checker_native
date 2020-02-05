@@ -8,6 +8,7 @@
     <color name="colorAccent">#CDD1C4</color>
 
     <color name="colorOnClickRipple">#5A5F6A</color>
+    <color name="colorOnClickRippleLight">#6A7F8A</color>
 
     <color name="placementWin">#5C80BC</color>
     <color name="placementLost">#666666</color>

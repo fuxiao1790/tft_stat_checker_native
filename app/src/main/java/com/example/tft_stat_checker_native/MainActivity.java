@@ -48,10 +48,13 @@ public class MainActivity extends FragmentActivity {
     MatchHistoryList matchHistoryList;
 
     String searchTarget = "";
-    String platform = "";
+    String platform = "NA";
 
-    String currentSearchTarget = "";
-    String currentPlatform = "";
+    String currentSearchTarget = ""; // for refreshing data
+    String currentPlatform = ""; // for refreshing data
+
+    // page elements
+    ProgressBar loadingIndicator;
 
     HashSet<String> searchHistory;
 
@@ -119,25 +122,34 @@ public class MainActivity extends FragmentActivity {
     public void iniChangeRegionButton() {
         Button changeRegionButton = findViewById(R.id.change_region_button);
         changeRegionButton.setOnClickListener((view) -> {
-            DialogFragment changeRegionDialog = new ChangeRegionDialog();
+            ChangeRegionDialog changeRegionDialog = new ChangeRegionDialog();
+            changeRegionDialog.setDefaultHighlightedItem(this.platform);
+            changeRegionDialog.setOnDialogConfirmListener((selectedPlatform) -> {
+                this.platform = selectedPlatform;
+                this.updatePlatform();
+            });
             changeRegionDialog.show(getSupportFragmentManager(), "wtf?");
         });
     }
 
     public void showLoading() {
-        ProgressBar loadingIndicator = findViewById(R.id.loading_indicator);
-        loadingIndicator.setVisibility(View.VISIBLE);
+        if (this.loadingIndicator == null) {
+            this.loadingIndicator = findViewById(R.id.loading_indicator);
+        }
+        this.loadingIndicator.setVisibility(View.VISIBLE);
     }
 
     public void hideLoading() {
-        ProgressBar loadingIndicator = findViewById(R.id.loading_indicator);
-        loadingIndicator.setVisibility(View.INVISIBLE);
+        if (this.loadingIndicator == null) {
+            this.loadingIndicator = findViewById(R.id.loading_indicator);
+        }
+        this.loadingIndicator.setVisibility(View.INVISIBLE);
     }
 
     public void refreshData(){
         clearData();
         showLoading();
-        fetchSummonerData(searchTarget, "NA");
+        fetchSummonerData(searchTarget, this.platform);
         //addSearchHistory(searchTarget);
     }
 
@@ -178,7 +190,14 @@ public class MainActivity extends FragmentActivity {
                 },
                 (VolleyError error) -> {
                     API.onError(error);
-                    onNetWorkRequestError(error);
+                    if (error.networkResponse.statusCode == 404) {
+                        SwipeRefreshLayout loader = findViewById(R.id.match_history_card_list_container);
+                        loader.setRefreshing(false);
+                        hideLoading();
+                        Toast.makeText(this, "Summoner Not Found", Toast.LENGTH_SHORT).show();
+                    } else {
+                        onNetWorkRequestError(error);
+                    }
                 }
         );
         requestQueue.add(req);
@@ -301,6 +320,7 @@ public class MainActivity extends FragmentActivity {
                     String data = targetAdapter.getMatchDataAt(position).getJson().toString();
                     Intent viewMatchDetail = new Intent(this, ViewMatchDetail.class);
                     viewMatchDetail.putExtra("matchData", data);
+                    viewMatchDetail.putExtra("platform", this.platform);
                     startActivity(viewMatchDetail);
                     break;
                 }
@@ -349,6 +369,11 @@ public class MainActivity extends FragmentActivity {
 
         ArrayAdapter<String> names = new ArrayAdapter<>(this, R.layout.auto_complete_item, autoCompleteNameList);
         searchText.setAdapter(names);
+    }
+
+    public void updatePlatform() {
+        Button changePlatformButton = findViewById(R.id.change_region_button);
+        changePlatformButton.setText(this.platform);
     }
 
     public void hideSoftKeyboard() {

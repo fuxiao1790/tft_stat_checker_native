@@ -147,16 +147,16 @@ class Config{
     public static void init() {
         if (!init) {
             platforms = new HashMap<>();
-            platforms.put("NA", "https://na1.api.riotgames.com");
             platforms.put("BR", "https://br1.api.riotgames.com");
             platforms.put("EUNE", "https://eun1.api.riotgames.com");
             platforms.put("EUW", "https://euw1.api.riotgames.com");
             platforms.put("JP", "https://jp1.api.riotgames.com");
             platforms.put("KR", "https://kr.api.riotgames.com");
-            platforms.put("LA", "https://la1.api.riotgames.com");
+            platforms.put("LAS", "https://la1.api.riotgames.com");
             platforms.put("OC", "https://oc1.api.riotgames.com");
             platforms.put("TR", "https://tr1.api.riotgames.com");
             platforms.put("RU", "https://ru.api.riotgames.com");
+            platforms.put("NA", "https://na1.api.riotgames.com");
 
             regions = new HashMap<>();
             regions.put("AMERICAS", "https://americas.api.riotgames.com");
