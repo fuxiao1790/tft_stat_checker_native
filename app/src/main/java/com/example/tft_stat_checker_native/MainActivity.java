@@ -1,19 +1,19 @@
 package com.example.tft_stat_checker_native;
 
-import androidx.appcompat.widget.PopupMenu;
-import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,12 +37,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
-public class MainActivity extends Activity {
+public class MainActivity extends FragmentActivity {
 
     RequestQueue requestQueue;
     SummonerData summonerData;
@@ -121,12 +119,8 @@ public class MainActivity extends Activity {
     public void iniChangeRegionButton() {
         Button changeRegionButton = findViewById(R.id.change_region_button);
         changeRegionButton.setOnClickListener((view) -> {
-            ChangeRegionDialog dialog = new ChangeRegionDialog(this, this.platform);
-            dialog.setOnDismissListener((arg) -> {
-                this.platform = dialog.getSelectedPlatform();
-                Log.d("selected platform", this.platform);
-            });
-            dialog.show();
+            DialogFragment changeRegionDialog = new ChangeRegionDialog();
+            changeRegionDialog.show(getSupportFragmentManager(), "wtf?");
         });
     }
 

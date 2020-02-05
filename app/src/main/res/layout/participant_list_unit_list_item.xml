@@ -23,44 +23,12 @@
         android:layout_height="wrap_content"
         app:flexDirection="row"
         app:justifyContent="space_evenly"
+        android:id="@+id/item_icon_container"
         app:layout_constraintTop_toBottomOf="@+id/unit_icon"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         >
-
-        <ImageView
-            android:id="@+id/item_1"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_marginTop="4dp"
-            android:adjustViewBounds="true"
-            android:background="@drawable/item_cornor"
-            android:foreground="@drawable/item_border"
-            android:scaleType="fitXY"
-            android:src="@drawable/tft2_aatrox"/>
-
-        <ImageView
-            android:id="@+id/item_2"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_marginTop="4dp"
-            android:adjustViewBounds="true"
-            android:background="@drawable/item_cornor"
-            android:foreground="@drawable/item_border"
-            android:scaleType="fitXY"
-            android:src="@drawable/tft2_aatrox"/>
-
-        <ImageView
-            android:id="@+id/item_3"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_marginTop="4dp"
-            android:adjustViewBounds="true"
-            android:background="@drawable/item_cornor"
-            android:foreground="@drawable/item_border"
-            android:scaleType="fitXY"
-            android:src="@drawable/tft2_aatrox"/>
 
     </com.google.android.flexbox.FlexboxLayout>
 

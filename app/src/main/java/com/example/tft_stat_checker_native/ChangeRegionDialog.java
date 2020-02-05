@@ -1,116 +1,115 @@
-package com.example.tft_stat_checker_native;
+    package com.example.tft_stat_checker_native;
 
-import android.app.Dialog;
-import android.content.Context;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.KeyboardShortcutGroup;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.widget.TextView;
+    import android.app.AlertDialog;
+    import android.app.Dialog;
+    import android.content.Context;
+    import android.os.Bundle;
+    import android.util.Log;
+    import android.view.LayoutInflater;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+    import androidx.annotation.NonNull;
+    import androidx.annotation.Nullable;
+    import androidx.fragment.app.DialogFragment;
+    import androidx.recyclerview.widget.LinearLayoutManager;
+    import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
-import java.util.List;
+    import android.view.View;
+    import android.view.ViewGroup;
+    import android.widget.Button;
+    import android.widget.TextView;
 
-public class ChangeRegionDialog extends Dialog {
+    import java.util.ArrayList;
 
-    private ArrayList<String> platforms;
-    private String selectedPlatform;
+    public class ChangeRegionDialog extends DialogFragment {
+        private OnDialogConfirmListener onDialogConfirmListener;
 
-    public ChangeRegionDialog(@NonNull Context context, String selectedPlatform) {
-        super(context);
-        Config.init();
-        this.platforms = new ArrayList<>();
-        Config.getPlatforms().forEach((String key, String value) -> {
-            this.platforms.add(key);
-        });
-        this.selectedPlatform = selectedPlatform;
+        public void setOnDialogConfirmListener(OnDialogConfirmListener listener) {
+            this.onDialogConfirmListener = listener;
+        }
+
+        @NonNull
+        @Override
+        public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+            LayoutInflater inflater = requireActivity().getLayoutInflater();
+            View view = inflater.inflate(R.layout.change_region_dialog, null);
+            builder.setView(view);
+
+            Button okButton = view.findViewById(R.id.ok_button);
+            okButton.setOnClickListener((target) -> {
+                if (this.onDialogConfirmListener != null) {
+                    this.onDialogConfirmListener.onConfirm("");
+                }
+                dismiss();
+            });
+
+            Button cancelButton = view.findViewById(R.id.cancel_button);
+            cancelButton.setOnClickListener((target) -> {
+                dismiss();
+            });
+
+            RecyclerView regionList = view.findViewById(R.id.region_list);
+            regionList.hasFixedSize();
+            regionList.setLayoutManager(new LinearLayoutManager(getContext()));
+
+            ArrayList<String> regions = new ArrayList<>();
+            Config.init();
+            Config.getPlatforms().forEach((key, value) -> {
+                regions.add(key);
+            });
+            RegionListAdapter adapter = new RegionListAdapter(regions, getContext());
+            regionList.setAdapter(adapter);
+
+            return builder.create();
+        }
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.change_region_dialog);
-
-        iniRecyclerView();
+    interface OnDialogConfirmListener {
+        void onConfirm(String region);
     }
 
-    private void iniRecyclerView() {
-        RecyclerView platformList = findViewById(R.id.region_list);
-        PlatFormListAdapter adapter = new PlatFormListAdapter(getContext(), this.platforms);
-        adapter.setOnRegionSelectListener((int index) -> selectedPlatform = platforms.get(index));
-        platformList.setLayoutManager(new LinearLayoutManager(getContext()));
-        platformList.setAdapter(adapter);
-        platformList.hasFixedSize();
+    class RegionListAdapter extends RecyclerView.Adapter<RegionListViewHolder> {
+        private ArrayList<String> regions;
+        private LayoutInflater inflater;
+
+        public RegionListAdapter(ArrayList<String> regions, Context ctx) {
+            this.regions = regions;
+            this.inflater = LayoutInflater.from(ctx);
+        }
+
+        @NonNull
+        @Override
+        public RegionListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            return new RegionListViewHolder(inflater.inflate(R.layout.region_list_item, parent, false));
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull RegionListViewHolder holder, int position) {
+            holder.getRegionText().setText(regions.get(position));
+        }
+
+        @Override
+        public int getItemCount() {
+            return regions.size();
+        }
     }
 
-    public String getSelectedPlatform() { return selectedPlatform; }
+    class RegionListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        private TextView regionText;
+        public RegionListViewHolder(@NonNull View itemView) {
+            super(itemView);
+            this.regionText = itemView.findViewById(R.id.region_text);
+        }
 
-    @Override public void onProvideKeyboardShortcuts(List<KeyboardShortcutGroup> data, @Nullable Menu menu, int deviceId) { }
-    @Override public void onPointerCaptureChanged(boolean hasCapture) { }
-}
+        public TextView getRegionText() {
+            return regionText;
+        }
 
-class PlatFormListAdapter extends RecyclerView.Adapter<PlatformViewHolder> {
-    private ArrayList<String> platformList;
-    private LayoutInflater layoutInflater;
-    private OnRegionSelectListener onRegionSelectListener;
-
-    public PlatFormListAdapter(Context ctx, ArrayList<String> platformList) {
-        this.layoutInflater = LayoutInflater.from(ctx);
-        this.platformList = platformList;
+        @Override
+        public void onClick(View view) {
+            Log.d("REGION LIST ITEM ON CLICK", getLayoutPosition() + "");
+        }
     }
 
-    public void setOnRegionSelectListener(OnRegionSelectListener onRegionSelectListener) {
-        this.onRegionSelectListener = onRegionSelectListener;
-    }
 
-    @NonNull
-    @Override
-    public PlatformViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new PlatformViewHolder(layoutInflater.inflate(R.layout.region_list_item, parent, false), onRegionSelectListener);
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull PlatformViewHolder holder, int position) {
-        holder.getRegion().setText(platformList.get(position));
-    }
-
-    @Override
-    public int getItemCount() {
-        return platformList.size();
-    }
-}
-
-class PlatformViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-    private TextView region;
-    private OnRegionSelectListener onRegionSelectListener;
-
-    public PlatformViewHolder(@NonNull View itemView, OnRegionSelectListener listener) {
-        super(itemView);
-        this.region = itemView.findViewById(R.id.region_text);
-        this.onRegionSelectListener = listener;
-    }
-
-    public void setOnRegionSelectListener(OnRegionSelectListener onRegionSelectListener) { this.onRegionSelectListener = onRegionSelectListener; }
-
-    public TextView getRegion() { return region; }
-
-    @Override
-    public void onClick(View view) {
-        Log.d("on click ?", "hello ??");
-        onRegionSelectListener.onSelect(getAdapterPosition());
-    }
-}
-
-interface OnRegionSelectListener {
-    void onSelect(int index);
-}
