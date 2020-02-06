@@ -3,9 +3,11 @@ package com.example.tft_stat_checker_native;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +20,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -31,6 +34,8 @@ public class EditSearchParams extends FragmentActivity {
 
     private String searchText;
     private String platform;
+
+    private ArrayList<SearchHistoryData> searchHistoryData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,9 +52,15 @@ public class EditSearchParams extends FragmentActivity {
     }
 
     private void iniData() {
+        // data from intent
         Bundle bundle = getIntent().getExtras();
         searchText = bundle.getString(MainActivity.SEARCH_TEXT_RESULT_KEY);
         platform = bundle.getString(MainActivity.PLATFORM_RESULT_KEY);
+        try {
+            searchHistoryData = SearchHistoryManager.buildListFromJSONArray(new JSONArray(bundle.getString(MainActivity.SEARCH_HISTORY_KEY, "")));
+        } catch(JSONException error) {
+            searchHistoryData = new ArrayList<>();
+        }
     }
 
     private void iniSearchHistoryList() {
@@ -57,16 +68,13 @@ public class EditSearchParams extends FragmentActivity {
         searchHistoryList.setLayoutManager(new LinearLayoutManager(this));
 
         // add adapter
-        ArrayList<SearchHistoryData> data = new ArrayList<>();
-        data.add(new SearchHistoryData("appearofflinemod", "NA"));
-        data.add(new SearchHistoryData("scarra", "NA"));
-        SearchHistoryListAdapter adapter = new SearchHistoryListAdapter(data, this);
+        SearchHistoryListAdapter adapter = new SearchHistoryListAdapter(this.searchHistoryData, this);
         searchHistoryList.setAdapter(adapter);
 
         // item on click listener
         adapter.setListItemOnClickListener((index) -> {
-            updatePlatform(data.get(index).getPlatform());
-            updateSearchText(data.get(index).getSummonerName());
+            updatePlatform(this.searchHistoryData.get(index).getPlatform());
+            updateSearchText(this.searchHistoryData.get(index).getSummonerName());
             searchButtonOnPress();
         });
 
@@ -175,13 +183,18 @@ class SearchHistoryListViewHolder extends RecyclerView.ViewHolder{
     }
 }
 
-class SearchHistoryData {
+class SearchHistoryData implements Comparable<SearchHistoryData>{
     private String summonerName;
     private String platform;
 
     public SearchHistoryData(String summonerName, String platform) {
         this.summonerName = summonerName;
         this.platform = platform;
+    }
+
+    public SearchHistoryData(JSONObject data) throws JSONException {
+        this.summonerName = data.getString("summonerName");
+        this.platform = data.getString("platform");
     }
 
     public String getSummonerName() {
@@ -192,14 +205,19 @@ class SearchHistoryData {
         return platform;
     }
 
-    public JSONObject toJSON() {
-        try {
-            JSONObject obj = new JSONObject();
-            obj.put("summonerName", summonerName);
-            obj.put("platform", platform);
-            return obj;
-        } catch(JSONException error) {
-            return null;
+    public JSONObject toJSON() throws JSONException{
+        JSONObject obj = new JSONObject();
+        obj.put("summonerName", summonerName);
+        obj.put("platform", platform);
+        return obj;
+    }
+
+    @Override
+    public int compareTo(SearchHistoryData other) {
+        if (this.summonerName.equals(other.summonerName) && this.platform.equals(other.platform)) {
+            return 0;
+        } else {
+            return -1;
         }
     }
 }

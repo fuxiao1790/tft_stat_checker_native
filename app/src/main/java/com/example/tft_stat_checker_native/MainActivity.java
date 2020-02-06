@@ -7,11 +7,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,11 +27,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 public class MainActivity extends FragmentActivity {
 
     public static final int EDIT_SEARCH_TEXT = 1;
     public static final String SEARCH_TEXT_RESULT_KEY = "SEARCH_TEXT_KEY";
     public static final String PLATFORM_RESULT_KEY = "PLATFORM_RESULT_KEY";
+    public static final String SEARCH_HISTORY_KEY = "SEARCH_HISTORY_KEY";
 
     RequestQueue requestQueue;
     SummonerData summonerData;
@@ -46,6 +50,10 @@ public class MainActivity extends FragmentActivity {
     TextView changeRegionButton;
     ConstraintLayout searchBar;
 
+    // search history
+    private SearchHistoryManager searchHistoryManager;
+    private SharedPreferences.Editor searchHistoryEditor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         requestQueue = Volley.newRequestQueue(this);
@@ -54,6 +62,12 @@ public class MainActivity extends FragmentActivity {
         iniRecyclerView();
         iniSwipeRefresh();
         iniSearchBar();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        iniSearchHistory();
     }
 
     @Override
@@ -85,6 +99,7 @@ public class MainActivity extends FragmentActivity {
             Intent editSearchText = new Intent(this, EditSearchParams.class);
             editSearchText.putExtra(MainActivity.SEARCH_TEXT_RESULT_KEY, this.searchTarget);
             editSearchText.putExtra(MainActivity.PLATFORM_RESULT_KEY, this.platform);
+            editSearchText.putExtra(MainActivity.SEARCH_HISTORY_KEY, this.searchHistoryManager.toJSON().toString());
             startActivityForResult(editSearchText, MainActivity.EDIT_SEARCH_TEXT);
         });
     }
@@ -151,28 +166,37 @@ public class MainActivity extends FragmentActivity {
         }
     }
 
-    public void showLoading() {
+    private void iniSearchHistory() {
+        this.searchHistoryEditor = getPreferences(Context.MODE_PRIVATE).edit();
+        this.searchHistoryManager = new SearchHistoryManager(getPreferences(Context.MODE_PRIVATE));
+    }
+
+    private void showLoading() {
         if (this.loadingIndicator == null) {
             this.loadingIndicator = findViewById(R.id.loading_indicator);
         }
         this.loadingIndicator.setVisibility(View.VISIBLE);
     }
 
-    public void hideLoading() {
+    private void hideLoading() {
         if (this.loadingIndicator == null) {
             this.loadingIndicator = findViewById(R.id.loading_indicator);
         }
         this.loadingIndicator.setVisibility(View.INVISIBLE);
     }
 
-    public void refreshData(){
+    private void refreshData(){
         clearData();
         showLoading();
         fetchSummonerData(this.searchTarget, this.platform);
-        //addSearchHistory(searchTarget);
+        addSearchHistory(searchTarget, platform);
     }
 
-    public void clearData() {
+    private void addSearchHistory(String name, String platform) {
+        this.searchHistoryManager.add(new SearchHistoryData(name, platform), this.searchHistoryEditor);
+    }
+
+    private void clearData() {
         RecyclerView target = findViewById(R.id.match_history_card_list);
         RecyclerViewListAdapter targetAdapter = (RecyclerViewListAdapter) target.getAdapter();
         targetAdapter.removeAllItems();
@@ -181,7 +205,7 @@ public class MainActivity extends FragmentActivity {
         matchHistoryList = null;
     }
 
-    public void fetchSummonerData(String name, String platform) {
+    private void fetchSummonerData(String name, String platform) {
         StringRequest req = API.getSummonerByName(
                 name,
                 platform,
@@ -222,7 +246,7 @@ public class MainActivity extends FragmentActivity {
         requestQueue.add(req);
     }
 
-    public void fetchSummonerRankedData(String id, String platform) {
+    private void fetchSummonerRankedData(String id, String platform) {
         StringRequest req = API.getSummonerRankedData(
                 id,
                 platform,
@@ -256,7 +280,7 @@ public class MainActivity extends FragmentActivity {
         requestQueue.add(req);
     }
 
-    public void fetchMatchHistoryList(String puuid, String platform) {
+    private void fetchMatchHistoryList(String puuid, String platform) {
         StringRequest req = API.getMatchHistoryList(
                 puuid,
                 100,
@@ -292,14 +316,14 @@ public class MainActivity extends FragmentActivity {
         requestQueue.add(req);
     }
 
-    public void onNetWorkRequestError(VolleyError error) {
+    private void onNetWorkRequestError(VolleyError error) {
         SwipeRefreshLayout loader = findViewById(R.id.match_history_card_list_container);
         loader.setRefreshing(false);
         hideLoading();
         Toast.makeText(this, "NetWork Error", Toast.LENGTH_SHORT).show();
     }
 
-    public void updateMatchHistoryList() {
+    private void updateMatchHistoryList() {
         RecyclerView target = findViewById(R.id.match_history_card_list);
         RecyclerViewListAdapter targetAdapter = (RecyclerViewListAdapter) target.getAdapter();
 
@@ -307,13 +331,13 @@ public class MainActivity extends FragmentActivity {
         targetAdapter.setMoreToLoad(false);
     }
 
-    public void updatePlayerCard() {
+    private void updatePlayerCard() {
         RecyclerView rv = findViewById(R.id.match_history_card_list);
         RecyclerViewListAdapter targetAdapter = (RecyclerViewListAdapter) rv.getAdapter();
         targetAdapter.setListHeaderData(new ListHeaderData(summonerData, summonerRankedData));
     }
 
-    public void updatePlatform() {
+    private void updatePlatform() {
         TextView changePlatformButton = findViewById(R.id.change_region_button);
         changePlatformButton.setText(this.platform);
     }

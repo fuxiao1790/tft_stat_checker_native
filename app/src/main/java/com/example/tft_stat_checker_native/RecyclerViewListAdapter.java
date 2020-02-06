@@ -473,38 +473,29 @@ class RecyclerViewContentViewHolder extends RecyclerViewListViewHolder implement
         itemView.setOnClickListener(this);
     }
 
-    public void setOnCardClickListener(OnCardClickListener onCardClickListener) {
-        this.onCardClickListener = onCardClickListener;
-    }
+    public void setOnCardClickListener(OnCardClickListener onCardClickListener) { this.onCardClickListener = onCardClickListener; }
 
     public ProgressBar getLoadingIndicator() {
         return loadingIndicator;
     }
-
     public ConstraintLayout getContainer() {
         return container;
     }
-
     public TextView getStatus() {
         return status;
     }
-
     public FlexboxLayout getTraitsContainer() {
         return traitsContainer;
     }
-
     public FlexboxLayout getUnitsContainer() {
         return unitsContainer;
     }
-
     public TextView getPlacement() {
         return placement;
     }
-
     public TextView getId() {
         return id;
     }
-
     @Override
     public void onClick(View view) {
         if (this.onCardClickListener != null) {
