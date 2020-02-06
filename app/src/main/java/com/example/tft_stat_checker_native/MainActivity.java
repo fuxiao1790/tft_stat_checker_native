@@ -43,7 +43,8 @@ public class MainActivity extends FragmentActivity {
     // page elements
     ProgressBar loadingIndicator;
     TextView searchText;
-    Button changeRegionButton;
+    TextView changeRegionButton;
+    ConstraintLayout searchBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +53,6 @@ public class MainActivity extends FragmentActivity {
         setContentView(R.layout.activity_main);
         iniRecyclerView();
         iniSwipeRefresh();
-        iniChangeRegionButton();
         iniSearchBar();
     }
 
@@ -66,6 +66,7 @@ public class MainActivity extends FragmentActivity {
                     String newPlatform = data.getStringExtra(MainActivity.PLATFORM_RESULT_KEY);
                     searchText.setText(newSearchText);
                     searchTarget = newSearchText;
+
                     changeRegionButton.setText(newPlatform);
                     platform = newPlatform;
                     refreshData();
@@ -77,9 +78,10 @@ public class MainActivity extends FragmentActivity {
 
     public void iniSearchBar() {
         this.searchText = findViewById(R.id.search_text);
-
+        this.changeRegionButton = findViewById(R.id.change_region_button);
+        searchBar = findViewById(R.id.search_bar_container);
         // go to search activity on press
-        this.searchText.setOnClickListener((view) -> {
+        searchBar.setOnClickListener((view) -> {
             Intent editSearchText = new Intent(this, EditSearchParams.class);
             editSearchText.putExtra(MainActivity.SEARCH_TEXT_RESULT_KEY, this.searchTarget);
             editSearchText.putExtra(MainActivity.PLATFORM_RESULT_KEY, this.platform);
@@ -104,19 +106,6 @@ public class MainActivity extends FragmentActivity {
             SwipeRefreshLayout layout = findViewById(R.id.match_history_card_list_container);
             layout.setProgressViewOffset(true, start, start + 200);
             layout.setDistanceToTriggerSync(300);
-        });
-    }
-
-    public void iniChangeRegionButton() {
-        this.changeRegionButton = findViewById(R.id.change_region_button);
-        this.changeRegionButton.setOnClickListener((view) -> {
-            ChangeRegionDialog changeRegionDialog = new ChangeRegionDialog();
-            changeRegionDialog.setDefaultHighlightedItem(this.platform);
-            changeRegionDialog.setOnDialogConfirmListener((selectedPlatform) -> {
-                this.platform = selectedPlatform;
-                this.updatePlatform();
-            });
-            changeRegionDialog.show(getSupportFragmentManager(), "wtf?");
         });
     }
 
@@ -325,7 +314,7 @@ public class MainActivity extends FragmentActivity {
     }
 
     public void updatePlatform() {
-        Button changePlatformButton = findViewById(R.id.change_region_button);
+        TextView changePlatformButton = findViewById(R.id.change_region_button);
         changePlatformButton.setText(this.platform);
     }
 }

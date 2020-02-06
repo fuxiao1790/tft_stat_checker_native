@@ -42,6 +42,8 @@ public class EditSearchParams extends FragmentActivity {
         iniSearchTextField();
         iniChangeRegionButton();
         iniSearchHistoryList();
+
+        searchTextField.requestFocus();
     }
 
     private void iniData() {
@@ -91,7 +93,6 @@ public class EditSearchParams extends FragmentActivity {
 
     private void iniSearchTextField() {
         searchTextField.setText(this.searchText);
-
         searchTextField.setOnEditorActionListener((target, key, event) -> {
             this.updateSearchText(searchTextField.getText().toString());
             this.searchButtonOnPress();

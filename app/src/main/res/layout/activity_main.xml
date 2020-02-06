@@ -77,7 +77,7 @@
             </shape>
         </aapt:attr>
 
-        <Button
+        <TextView
             android:id="@+id/change_region_button"
             android:layout_width="wrap_content"
             android:layout_height="38dp"
@@ -89,6 +89,7 @@
             android:minWidth="0dp"
             android:minHeight="0dp"
             android:textColor="@color/textPrimary"
+            android:gravity="center"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -101,7 +102,7 @@
                     <padding android:left="16dp" android:top="16dp" android:right="16dp" android:bottom="16dp" />
                 </shape>
             </aapt:attr>
-        </Button>
+        </TextView>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ProgressBar
