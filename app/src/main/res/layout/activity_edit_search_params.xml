@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimaryDark">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/search_bar_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:elevation="10dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <EditText
+            android:id="@+id/search_text"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@null"
+            android:gravity="center|left"
+            android:hint="Search by Summoner Name"
+            android:imeOptions="actionSearch"
+            android:maxLines="1"
+            android:lines="1"
+            android:textColor="@color/textPrimary"
+            android:textColorHint="@color/textHint"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/change_region_button"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <aapt:attr name="android:background">
+
+            <shape xmlns:android="http://schemas.android.com/apk/res/android">
+
+                <solid android:color="@color/colorPrimaryLight" />
+
+                <corners android:radius="50dp" />
+
+                <padding
+                    android:bottom="6dp"
+                    android:left="24sp"
+                    android:right="8dp"
+                    android:top="6dp" />
+            </shape>
+        </aapt:attr>
+
+        <Button xmlns:aapt="http://schemas.android.com/aapt"
+            android:id="@+id/change_region_button"
+            android:layout_width="wrap_content"
+            android:layout_height="38dp"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            android:paddingStart="12dp"
+            android:paddingTop="0dp"
+            android:paddingEnd="12dp"
+            android:paddingBottom="0dp"
+            android:text="NA"
+            android:textColor="@color/textPrimary"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <aapt:attr name="android:background">
+
+                <shape xmlns:android="http://schemas.android.com/apk/res/android">
+
+                    <solid android:color="@color/changeRegionButtonBG" />
+
+                    <corners android:radius="50dp" />
+
+                    <padding
+                        android:bottom="16dp"
+                        android:left="16dp"
+                        android:right="16dp"
+                        android:top="16dp" />
+                </shape>
+            </aapt:attr>
+        </Button>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/search_history_list"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/search_bar_container"
+        app:layout_constraintStart_toStartOf="@+id/search_bar_container"
+        app:layout_constraintTop_toBottomOf="@+id/search_bar_container">
+
+    </androidx.recyclerview.widget.RecyclerView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

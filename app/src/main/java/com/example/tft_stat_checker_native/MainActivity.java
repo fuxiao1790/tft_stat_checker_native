@@ -1,27 +1,17 @@
 package com.example.tft_stat_checker_native;
 
-import androidx.fragment.app.DialogFragment;
+import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,11 +26,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
-
 public class MainActivity extends FragmentActivity {
+
+    public static final int EDIT_SEARCH_TEXT = 1;
+    public static final String SEARCH_TEXT_RESULT_KEY = "SEARCH_TEXT_KEY";
+    public static final String PLATFORM_RESULT_KEY = "PLATFORM_RESULT_KEY";
 
     RequestQueue requestQueue;
     SummonerData summonerData;
@@ -50,53 +40,51 @@ public class MainActivity extends FragmentActivity {
     String searchTarget = "";
     String platform = "NA";
 
-    String currentSearchTarget = ""; // for refreshing data
-    String currentPlatform = ""; // for refreshing data
-
     // page elements
     ProgressBar loadingIndicator;
-
-    HashSet<String> searchHistory;
+    TextView searchText;
+    Button changeRegionButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        readSearchHistory();
-
         requestQueue = Volley.newRequestQueue(this);
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         iniRecyclerView();
-        iniSearchBar();
         iniSwipeRefresh();
-        iniKeyboard();
         iniChangeRegionButton();
+        iniSearchBar();
     }
 
-    public void iniKeyboard() {
-        View root = findViewById(R.id.root_view);
-        setupUI(root);
-    }
-
-    public void setupUI(View view) {
-        // Set up touch listener for non-text box views to hide keyboard.
-        if (!(view instanceof EditText)) {
-            view.setOnTouchListener((View v, MotionEvent event) -> {
-                TextView searchText = findViewById(R.id.searchText);
-                hideSoftKeyboard();
-                searchText.clearFocus();
-                return false;
-            });
-        }
-
-        //If a layout container, iterate over children and seed recursion.
-        if (view instanceof ViewGroup) {
-            for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
-                View innerView = ((ViewGroup) view).getChildAt(i);
-                setupUI(innerView);
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case MainActivity.EDIT_SEARCH_TEXT: {
+                if (resultCode == MainActivity.RESULT_OK) {
+                    String newSearchText = data.getStringExtra(MainActivity.SEARCH_TEXT_RESULT_KEY);
+                    String newPlatform = data.getStringExtra(MainActivity.PLATFORM_RESULT_KEY);
+                    searchText.setText(newSearchText);
+                    searchTarget = newSearchText;
+                    changeRegionButton.setText(newPlatform);
+                    platform = newPlatform;
+                    refreshData();
+                }
+                break;
             }
         }
+    }
+
+    public void iniSearchBar() {
+        this.searchText = findViewById(R.id.search_text);
+
+        // go to search activity on press
+        this.searchText.setOnClickListener((view) -> {
+            Intent editSearchText = new Intent(this, EditSearchParams.class);
+            editSearchText.putExtra(MainActivity.SEARCH_TEXT_RESULT_KEY, this.searchTarget);
+            editSearchText.putExtra(MainActivity.PLATFORM_RESULT_KEY, this.platform);
+            startActivityForResult(editSearchText, MainActivity.EDIT_SEARCH_TEXT);
+        });
     }
 
     public void iniSwipeRefresh() {
@@ -111,8 +99,8 @@ public class MainActivity extends FragmentActivity {
         // offset top
         // refresh trigger offset
         getWindow().getDecorView().post(() -> {
-            EditText t = findViewById(R.id.searchText);
-            int start = (int) t.getY();
+            ConstraintLayout searchBar = findViewById(R.id.search_bar_container);
+            int start = (int) searchBar.getY();
             SwipeRefreshLayout layout = findViewById(R.id.match_history_card_list_container);
             layout.setProgressViewOffset(true, start, start + 200);
             layout.setDistanceToTriggerSync(300);
@@ -120,8 +108,8 @@ public class MainActivity extends FragmentActivity {
     }
 
     public void iniChangeRegionButton() {
-        Button changeRegionButton = findViewById(R.id.change_region_button);
-        changeRegionButton.setOnClickListener((view) -> {
+        this.changeRegionButton = findViewById(R.id.change_region_button);
+        this.changeRegionButton.setOnClickListener((view) -> {
             ChangeRegionDialog changeRegionDialog = new ChangeRegionDialog();
             changeRegionDialog.setDefaultHighlightedItem(this.platform);
             changeRegionDialog.setOnDialogConfirmListener((selectedPlatform) -> {
@@ -130,6 +118,48 @@ public class MainActivity extends FragmentActivity {
             });
             changeRegionDialog.show(getSupportFragmentManager(), "wtf?");
         });
+    }
+
+    private void iniRecyclerView() {
+        RecyclerView target = findViewById(R.id.match_history_card_list);
+        target.hasFixedSize();
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setInitialPrefetchItemCount(10);
+        target.setLayoutManager(layoutManager);
+
+        RecyclerViewListAdapter targetAdapter =  new RecyclerViewListAdapter(this, this.requestQueue);
+
+        target.setAdapter(targetAdapter);
+
+        target.setVerticalScrollBarEnabled(true);
+
+        targetAdapter.setOnCardClickListener((int position) -> {
+
+            switch (targetAdapter.getItemStatus(position)) {
+                case RecyclerViewListAdapter.FAILED: {
+                    targetAdapter.reLoadData(position);
+                    break;
+                }
+                case RecyclerViewListAdapter.LOADED: {
+                    //Intent viewMatchDetail = new Intent();
+                    String data = targetAdapter.getMatchDataAt(position).getJson().toString();
+                    Intent viewMatchDetail = new Intent(this, ViewMatchDetail.class);
+                    viewMatchDetail.putExtra("matchData", data);
+                    viewMatchDetail.putExtra("platform", this.platform);
+                    startActivity(viewMatchDetail);
+                    break;
+                }
+            }
+        });
+
+        if (summonerData != null && summonerRankedData != null) {
+            updatePlayerCard();
+        }
+
+        if (matchHistoryList != null) {
+            updateMatchHistoryList();
+        }
     }
 
     public void showLoading() {
@@ -149,7 +179,7 @@ public class MainActivity extends FragmentActivity {
     public void refreshData(){
         clearData();
         showLoading();
-        fetchSummonerData(searchTarget, this.platform);
+        fetchSummonerData(this.searchTarget, this.platform);
         //addSearchHistory(searchTarget);
     }
 
@@ -294,92 +324,8 @@ public class MainActivity extends FragmentActivity {
         targetAdapter.setListHeaderData(new ListHeaderData(summonerData, summonerRankedData));
     }
 
-    private void iniRecyclerView() {
-        RecyclerView target = findViewById(R.id.match_history_card_list);
-        target.hasFixedSize();
-
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        layoutManager.setInitialPrefetchItemCount(10);
-        target.setLayoutManager(layoutManager);
-
-        RecyclerViewListAdapter targetAdapter =  new RecyclerViewListAdapter(this, this.requestQueue);
-
-        target.setAdapter(targetAdapter);
-
-        target.setVerticalScrollBarEnabled(true);
-
-        targetAdapter.setOnCardClickListener((int position) -> {
-
-            switch (targetAdapter.getItemStatus(position)) {
-                case RecyclerViewListAdapter.FAILED: {
-                    targetAdapter.reLoadData(position);
-                    break;
-                }
-                case RecyclerViewListAdapter.LOADED: {
-                    //Intent viewMatchDetail = new Intent();
-                    String data = targetAdapter.getMatchDataAt(position).getJson().toString();
-                    Intent viewMatchDetail = new Intent(this, ViewMatchDetail.class);
-                    viewMatchDetail.putExtra("matchData", data);
-                    viewMatchDetail.putExtra("platform", this.platform);
-                    startActivity(viewMatchDetail);
-                    break;
-                }
-            }
-        });
-
-        if (summonerData != null && summonerRankedData != null) {
-            updatePlayerCard();
-        }
-
-        if (matchHistoryList != null) {
-            updateMatchHistoryList();
-        }
-    }
-
-    private void addSearchHistory(String s) {
-        SharedPreferences sharedPreferences = getSharedPreferences("storage", MODE_PRIVATE);
-        searchHistory.add(s);
-        sharedPreferences.edit().putStringSet("searchHistory", searchHistory).commit();
-        AutoCompleteTextView searchText = findViewById(R.id.searchText);
-        AutoCompleteArrayAdapter adapter = (AutoCompleteArrayAdapter) searchText.getAdapter();
-        adapter.addItem(s);
-    }
-
-    private void readSearchHistory() {
-        SharedPreferences sharedPreferences = getSharedPreferences("storage", MODE_PRIVATE);
-        Set<String> data = sharedPreferences.getStringSet("searchHistory", new HashSet<String>());
-        this.searchHistory = new HashSet<>();
-        data.forEach((searchItem) -> searchHistory.add(searchItem));
-    }
-
-    private void iniSearchBar() {
-        AutoCompleteTextView searchText = findViewById(R.id.searchText);
-        searchText.setOnEditorActionListener((TextView v, int actionID, KeyEvent evt) -> {
-            searchTarget = searchText.getText().toString();
-            refreshData();
-            hideSoftKeyboard();
-            searchText.clearFocus();
-            return true;
-        });
-
-        searchText.setOnFocusChangeListener((view, focus) -> { if (focus) { searchText.showDropDown(); } });
-
-        ArrayList<String> autoCompleteNameList = new ArrayList<>();
-        this.searchHistory.forEach((name) -> autoCompleteNameList.add(name));
-
-        ArrayAdapter<String> names = new ArrayAdapter<>(this, R.layout.auto_complete_item, autoCompleteNameList);
-        searchText.setAdapter(names);
-    }
-
     public void updatePlatform() {
         Button changePlatformButton = findViewById(R.id.change_region_button);
         changePlatformButton.setText(this.platform);
-    }
-
-    public void hideSoftKeyboard() {
-        if (getCurrentFocus() != null) {
-            InputMethodManager inputMethodManager = (InputMethodManager) this.getSystemService(Activity.INPUT_METHOD_SERVICE);
-            inputMethodManager.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), 0);
-        }
     }
 }
