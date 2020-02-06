@@ -55,6 +55,9 @@ public class RecyclerViewListAdapter extends RecyclerView.Adapter<RecyclerViewLi
     // on click listener
     private OnCardClickListener onCardClickListener;
 
+    // platform
+    private String platform;
+
     private LayoutInflater layoutInflater;
 
     public RecyclerViewListAdapter(Context ctx, RequestQueue queue) {
@@ -67,6 +70,10 @@ public class RecyclerViewListAdapter extends RecyclerView.Adapter<RecyclerViewLi
         this.unitIconsStorage = new HashMap<>();
         this.traitIconsStorage = new HashMap<>();
         this.layoutInflater = LayoutInflater.from(ctx);
+    }
+
+    public void setPlatform(String platform) {
+        this.platform = platform;
     }
 
     public void setListHeaderData(ListHeaderData listHeaderData) {
@@ -365,7 +372,7 @@ public class RecyclerViewListAdapter extends RecyclerView.Adapter<RecyclerViewLi
         // fetch data and update recyclerview
         StringRequest req = API.getMatchResultByMatchID(
                 data.get(position).getId(),
-                "NA",
+                this.platform,
                 (String res) -> {
                     Log.d("getMatchResultByMatchID", res);
                     try {

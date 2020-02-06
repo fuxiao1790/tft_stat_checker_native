@@ -49,6 +49,7 @@ public class MainActivity extends FragmentActivity {
     TextView searchText;
     TextView changeRegionButton;
     ConstraintLayout searchBar;
+    RecyclerViewListAdapter matchHistoryListAdapter;
 
     // search history
     private SearchHistoryManager searchHistoryManager;
@@ -132,22 +133,22 @@ public class MainActivity extends FragmentActivity {
         layoutManager.setInitialPrefetchItemCount(10);
         target.setLayoutManager(layoutManager);
 
-        RecyclerViewListAdapter targetAdapter =  new RecyclerViewListAdapter(this, this.requestQueue);
+        this.matchHistoryListAdapter =  new RecyclerViewListAdapter(this, this.requestQueue);
 
-        target.setAdapter(targetAdapter);
+        target.setAdapter(matchHistoryListAdapter);
 
         target.setVerticalScrollBarEnabled(true);
 
-        targetAdapter.setOnCardClickListener((int position) -> {
+        matchHistoryListAdapter.setOnCardClickListener((int position) -> {
 
-            switch (targetAdapter.getItemStatus(position)) {
+            switch (matchHistoryListAdapter.getItemStatus(position)) {
                 case RecyclerViewListAdapter.FAILED: {
-                    targetAdapter.reLoadData(position);
+                    matchHistoryListAdapter.reLoadData(position);
                     break;
                 }
                 case RecyclerViewListAdapter.LOADED: {
                     //Intent viewMatchDetail = new Intent();
-                    String data = targetAdapter.getMatchDataAt(position).getJson().toString();
+                    String data = matchHistoryListAdapter.getMatchDataAt(position).getJson().toString();
                     Intent viewMatchDetail = new Intent(this, ViewMatchDetail.class);
                     viewMatchDetail.putExtra("matchData", data);
                     viewMatchDetail.putExtra("platform", this.platform);
@@ -189,6 +190,7 @@ public class MainActivity extends FragmentActivity {
         clearData();
         showLoading();
         fetchSummonerData(this.searchTarget, this.platform);
+        matchHistoryListAdapter.setPlatform(this.platform);
         addSearchHistory(searchTarget, platform);
     }
 
