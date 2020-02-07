@@ -79,12 +79,14 @@ public class MainActivity extends FragmentActivity {
                 if (resultCode == MainActivity.RESULT_OK) {
                     String newSearchText = data.getStringExtra(MainActivity.SEARCH_TEXT_RESULT_KEY);
                     String newPlatform = data.getStringExtra(MainActivity.PLATFORM_RESULT_KEY);
-                    searchText.setText(newSearchText);
-                    searchTarget = newSearchText;
+                    if (newSearchText.length() > 0) {
+                        searchText.setText(newSearchText);
+                        searchTarget = newSearchText;
 
-                    changeRegionButton.setText(newPlatform);
-                    platform = newPlatform;
-                    refreshData();
+                        changeRegionButton.setText(newPlatform);
+                        platform = newPlatform;
+                        refreshData();
+                    }
                 }
                 break;
             }
@@ -195,7 +197,9 @@ public class MainActivity extends FragmentActivity {
     }
 
     private void addSearchHistory(String name, String platform) {
-        this.searchHistoryManager.add(new SearchHistoryData(name, platform), this.searchHistoryEditor);
+        if (name.length() > 0) {
+            this.searchHistoryManager.add(new SearchHistoryData(name, platform), this.searchHistoryEditor);
+        }
     }
 
     private void clearData() {
