@@ -18,7 +18,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.example.tft_stat_checker_native.Controller.API;
+import com.example.tft_stat_checker_native.Modal.API;
 import com.example.tft_stat_checker_native.Controller.Config;
 import com.example.tft_stat_checker_native.Modal.ParticipantData;
 import com.example.tft_stat_checker_native.Modal.SummonerData;

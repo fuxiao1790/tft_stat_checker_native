@@ -21,6 +21,7 @@
     import com.example.tft_stat_checker_native.Controller.Config;
     import com.example.tft_stat_checker_native.Controller.ListItemOnClickListener;
     import com.example.tft_stat_checker_native.Controller.OnDialogConfirmListener;
+    import com.example.tft_stat_checker_native.Modal.API;
     import com.example.tft_stat_checker_native.R;
 
     import java.util.ArrayList;
@@ -67,8 +68,7 @@
 
             // create list adapter
             ArrayList<String> regions = new ArrayList<>();
-            Config.init();
-            Config.getPlatforms().forEach((key, value) -> regions.add(key));
+            API.getPlatforms().forEach((platform) -> regions.add(platform));
             RegionListAdapter adapter = new RegionListAdapter(regions, getContext());
             regionList.setAdapter(adapter);
 

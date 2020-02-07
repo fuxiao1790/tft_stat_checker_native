@@ -1,7 +1,5 @@
 package com.example.tft_stat_checker_native.Modal;
 
-import com.example.tft_stat_checker_native.Modal.MatchData;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 

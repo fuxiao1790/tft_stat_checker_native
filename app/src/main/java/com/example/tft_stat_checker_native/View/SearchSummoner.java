@@ -22,7 +22,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.tft_stat_checker_native.Controller.API;
+import com.example.tft_stat_checker_native.Modal.API;
 import com.example.tft_stat_checker_native.Controller.SearchHistoryManager;
 import com.example.tft_stat_checker_native.Modal.MatchHistoryListData;
 import com.example.tft_stat_checker_native.Modal.SearchHistoryData;
@@ -42,10 +42,13 @@ public class SearchSummoner extends FragmentActivity {
     public static final String SEARCH_HISTORY_KEY = "SEARCH_HISTORY_KEY";
 
     RequestQueue requestQueue;
+
+    // data
     SummonerData summonerData;
     SummonerRankedData summonerRankedData;
     MatchHistoryListData matchHistoryList;
 
+    // text displayed
     String summonerName = "";
     String platform = "NA";
 
@@ -55,6 +58,8 @@ public class SearchSummoner extends FragmentActivity {
     TextView platformText;
     ConstraintLayout searchBar;
     RecyclerView matchHistoryRecyclerView;
+    SwipeRefreshLayout pullToRefresh;
+
     MatchHistoryListAdapter matchHistoryListAdapter;
 
     // search history
@@ -66,9 +71,20 @@ public class SearchSummoner extends FragmentActivity {
         requestQueue = Volley.newRequestQueue(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_summoner);
+
+        iniPageComponents();
         iniRecyclerView();
         iniSwipeRefresh();
         iniSearchBar();
+    }
+
+    private void iniPageComponents() {
+        this.loadingIndicator = findViewById(R.id.loading_indicator);
+        this.summonerNameText = findViewById(R.id.search_text);
+        this.platformText = findViewById(R.id.platform_text);
+        this.searchBar = findViewById(R.id.search_bar_container);
+        this.matchHistoryRecyclerView = findViewById(R.id.match_history_card_list);
+        this.pullToRefresh = findViewById(R.id.match_history_card_list_container);
     }
 
     @Override
@@ -97,9 +113,6 @@ public class SearchSummoner extends FragmentActivity {
     }
 
     public void iniSearchBar() {
-        summonerNameText = findViewById(R.id.search_text);
-        platformText = findViewById(R.id.change_region_button);
-        searchBar = findViewById(R.id.search_bar_container);
         // go to search activity on press
         searchBar.setOnClickListener((view) -> {
             Intent editSearchText = new Intent(this, EditSearchParams.class);
@@ -112,8 +125,7 @@ public class SearchSummoner extends FragmentActivity {
 
     public void iniSwipeRefresh() {
         // set-up onRefresh listener
-        SwipeRefreshLayout container = findViewById(R.id.match_history_card_list_container);
-        container.setOnRefreshListener(() -> {
+        pullToRefresh.setOnRefreshListener(() -> {
             // do on refresh
             requestQueue.cancelAll((Request<?> request) -> true);
             refreshData();
@@ -122,16 +134,13 @@ public class SearchSummoner extends FragmentActivity {
         // offset top
         // refresh trigger offset
         getWindow().getDecorView().post(() -> {
-            ConstraintLayout searchBar = findViewById(R.id.search_bar_container);
             int start = (int) searchBar.getY();
-            SwipeRefreshLayout layout = findViewById(R.id.match_history_card_list_container);
-            layout.setProgressViewOffset(true, start, start + 200);
-            layout.setDistanceToTriggerSync(300);
+            pullToRefresh.setProgressViewOffset(true, start, start + 200);
+            pullToRefresh.setDistanceToTriggerSync(300);
         });
     }
 
     private void iniRecyclerView() {
-        matchHistoryRecyclerView = findViewById(R.id.match_history_card_list);
         matchHistoryRecyclerView.hasFixedSize();
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -175,22 +184,19 @@ public class SearchSummoner extends FragmentActivity {
     }
 
     private void showLoading() {
-        if (loadingIndicator == null) {
-            loadingIndicator = findViewById(R.id.loading_indicator);
-        }
-        this.loadingIndicator.setVisibility(View.VISIBLE);
+        pullToRefresh.setEnabled(false);
+        loadingIndicator.setVisibility(View.VISIBLE);
     }
 
     private void hideLoading() {
-        if (loadingIndicator == null) {
-            loadingIndicator = findViewById(R.id.loading_indicator);
-        }
+        pullToRefresh.setEnabled(true);
         loadingIndicator.setVisibility(View.INVISIBLE);
     }
 
     private void refreshData(){
         clearData();
         showLoading();
+        requestQueue.cancelAll((arg) -> true);
         fetchSummonerData(summonerName, platform);
         matchHistoryListAdapter.setPlatform(platform);
         addSearchHistory(summonerName, platform);
@@ -203,9 +209,7 @@ public class SearchSummoner extends FragmentActivity {
     }
 
     private void clearData() {
-        RecyclerView target = findViewById(R.id.match_history_card_list);
-        MatchHistoryListAdapter targetAdapter = (MatchHistoryListAdapter) target.getAdapter();
-        targetAdapter.removeAllItems();
+        matchHistoryListAdapter.removeAllItems();
         summonerData = null;
         summonerRankedData = null;
         matchHistoryList = null;
@@ -240,8 +244,7 @@ public class SearchSummoner extends FragmentActivity {
                 (VolleyError error) -> {
                     API.onError(error);
                     if (error.networkResponse.statusCode == 404) {
-                        SwipeRefreshLayout loader = findViewById(R.id.match_history_card_list_container);
-                        loader.setRefreshing(false);
+                        pullToRefresh.setRefreshing(false);
                         hideLoading();
                         Toast.makeText(this, "Summoner Not Found", Toast.LENGTH_SHORT).show();
                     } else {
@@ -306,8 +309,7 @@ public class SearchSummoner extends FragmentActivity {
                         updateMatchHistoryList();
 
                         // set loading indicator
-                        SwipeRefreshLayout layout = findViewById(R.id.match_history_card_list_container);
-                        layout.setRefreshing(false);
+                        pullToRefresh.setRefreshing(false);
                         hideLoading();
 
                     } catch (JSONException error) {
@@ -323,24 +325,18 @@ public class SearchSummoner extends FragmentActivity {
     }
 
     private void onNetWorkRequestError(VolleyError error) {
-        SwipeRefreshLayout loader = findViewById(R.id.match_history_card_list_container);
-        loader.setRefreshing(false);
+        pullToRefresh.setRefreshing(false);
         hideLoading();
         Toast.makeText(this, "NetWork Error", Toast.LENGTH_SHORT).show();
     }
 
     private void updateMatchHistoryList() {
-        RecyclerView target = findViewById(R.id.match_history_card_list);
-        MatchHistoryListAdapter targetAdapter = (MatchHistoryListAdapter) target.getAdapter();
-
-        targetAdapter.appendAllItems(matchHistoryList.getList());
-        targetAdapter.setMoreToLoad(false);
+        matchHistoryListAdapter.appendAllItems(matchHistoryList.getList());
+        matchHistoryListAdapter.setMoreToLoad(false);
     }
 
     private void updatePlayerCard() {
-        RecyclerView rv = findViewById(R.id.match_history_card_list);
-        MatchHistoryListAdapter targetAdapter = (MatchHistoryListAdapter) rv.getAdapter();
-        targetAdapter.setListHeaderData(summonerData, summonerRankedData);
+        matchHistoryListAdapter.setListHeaderData(summonerData, summonerRankedData);
     }
 
     private void updatePlatform(String platform) {
