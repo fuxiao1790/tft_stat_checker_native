@@ -30,10 +30,10 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/tft_stat_checker_native/MainActivity.java">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/tft_stat_checker_native/EditSearchParams.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2423">
-              <caret line="192" column="59" lean-forward="true" selection-start-line="192" selection-start-column="59" selection-end-line="192" selection-end-column="59" />
+            <state relative-caret-position="400">
+              <caret line="79" column="34" lean-forward="true" selection-start-line="79" selection-start-column="34" selection-end-line="79" selection-end-column="34" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -44,8 +44,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/tft_stat_checker_native/SearchHistoryManager.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="114">
-              <caret line="22" column="38" selection-start-line="22" selection-start-column="38" selection-end-line="22" selection-end-column="38" />
+            <state relative-caret-position="103">
+              <caret line="16" column="13" lean-forward="true" selection-start-line="16" selection-start-column="13" selection-end-line="16" selection-end-column="13" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -56,8 +56,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/tft_stat_checker_native/RecyclerViewListAdapter.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="292">
-              <caret line="374" column="29" selection-start-line="374" selection-start-column="29" selection-end-line="374" selection-end-column="29" />
+            <state relative-caret-position="1604">
+              <caret line="417" column="5" lean-forward="true" selection-start-line="417" selection-start-column="5" selection-end-line="417" selection-end-column="5" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#2620#2621#0" expanded="true" />
@@ -72,8 +72,20 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/tft_stat_checker_native/ParticipantListAdapter.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="429">
-              <caret line="50" column="24" selection-start-line="50" selection-start-column="24" selection-end-line="50" selection-end-column="24" />
+            <state relative-caret-position="232">
+              <caret line="53" column="41" selection-start-line="53" selection-start-column="41" selection-end-line="53" selection-end-column="41" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/tft_stat_checker_native/MainActivity.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="204">
+              <caret line="200" column="42" selection-start-line="200" selection-start-column="42" selection-end-line="200" selection-end-column="42" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -95,10 +107,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>setupui</find>
-      <find>edittext</find>
-      <find>R.id.searchtext</find>
-      <find>t.</find>
       <find>ini</find>
       <find>aapt</find>
       <find>startac</find>
@@ -108,7 +116,6 @@
       <find>totopof=&quot;parent</find>
       <find>inichangere</find>
       <find>changeregionbutton</find>
-      <find>refreshdata</find>
       <find>finish</find>
       <find>public void</find>
       <find>addsearchhistory</find>
@@ -119,12 +126,17 @@
       <find>card</find>
       <find>placement</find>
       <find>indexof</find>
-      <find>adapter</find>
       <find>loaddata</find>
       <find>RecyclerViewListAdapter</find>
-      <find>refresh</find>
       <find>NA</find>
       <find>&quot;NA&quot;</find>
+      <find>refresh</find>
+      <find>addsearc</find>
+      <find>adapter</find>
+      <find>new SearchHistoryData</find>
+      <find>refreshdata</find>
+      <find>searchhistorymanager.add</find>
+      <find>setListItemOnClickListener</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -179,17 +191,18 @@
         <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/match_history_list_card_header.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/match_history_list_card.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/example/tft_stat_checker_native/SearchHistoryManager.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/example/tft_stat_checker_native/EditSearchParams.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/tft_stat_checker_native/API.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/tft_stat_checker_native/MainActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/tft_stat_checker_native/RecyclerViewListAdapter.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/example/tft_stat_checker_native/SearchHistoryManager.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/example/tft_stat_checker_native/EditSearchParams.java" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
+    <option name="x" value="94" />
     <option name="y" value="23" />
-    <option name="width" value="1920" />
+    <option name="width" value="1826" />
     <option name="height" value="993" />
   </component>
   <component name="ProjectView">
@@ -369,7 +382,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="23" width="1920" height="993" extended-state="0" />
+    <frame x="94" y="23" width="1826" height="993" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Structure" order="0" side_tool="true" />
@@ -379,7 +392,7 @@
       <window_info id="Build Variants" order="4" side_tool="true" />
       <window_info id="Capture Tool" order="5" />
       <window_info id="Resources Explorer" order="6" weight="0.1969066" />
-      <window_info content_ui="combo" id="Project" order="7" visible="true" weight="0.19595315" />
+      <window_info content_ui="combo" id="Project" order="7" visible="true" weight="0.20627803" />
       <window_info id="Captures" order="8" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Find" order="0" />
       <window_info anchor="bottom" id="Logcat" order="1" weight="0.32852387" />
@@ -746,16 +759,6 @@
       </provider>
       <provider selected="true" editor-type-id="android-designer2" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/tft_stat_checker_native/EditSearchParams.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="286">
-          <caret line="72" lean-forward="true" selection-start-line="72" selection-end-line="72" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/match_history_list_card.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="285">
@@ -773,8 +776,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/tft_stat_checker_native/ParticipantListAdapter.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="429">
-          <caret line="50" column="24" selection-start-line="50" selection-start-column="24" selection-end-line="50" selection-end-column="24" />
+        <state relative-caret-position="232">
+          <caret line="53" column="41" selection-start-line="53" selection-start-column="41" selection-end-line="53" selection-end-column="41" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -783,8 +786,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/tft_stat_checker_native/RecyclerViewListAdapter.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="292">
-          <caret line="374" column="29" selection-start-line="374" selection-start-column="29" selection-end-line="374" selection-end-column="29" />
+        <state relative-caret-position="1604">
+          <caret line="417" column="5" lean-forward="true" selection-start-line="417" selection-start-column="5" selection-end-line="417" selection-end-column="5" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#2620#2621#0" expanded="true" />
@@ -795,20 +798,30 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/tft_stat_checker_native/SearchHistoryManager.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/tft_stat_checker_native/MainActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="114">
-          <caret line="22" column="38" selection-start-line="22" selection-start-column="38" selection-end-line="22" selection-end-column="38" />
+        <state relative-caret-position="204">
+          <caret line="200" column="42" selection-start-line="200" selection-start-column="42" selection-end-line="200" selection-end-column="42" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/tft_stat_checker_native/MainActivity.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/tft_stat_checker_native/SearchHistoryManager.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2423">
-          <caret line="192" column="59" lean-forward="true" selection-start-line="192" selection-start-column="59" selection-end-line="192" selection-end-column="59" />
+        <state relative-caret-position="103">
+          <caret line="16" column="13" lean-forward="true" selection-start-line="16" selection-start-column="13" selection-end-line="16" selection-end-column="13" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/tft_stat_checker_native/EditSearchParams.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="400">
+          <caret line="79" column="34" lean-forward="true" selection-start-line="79" selection-start-column="34" selection-end-line="79" selection-end-column="34" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

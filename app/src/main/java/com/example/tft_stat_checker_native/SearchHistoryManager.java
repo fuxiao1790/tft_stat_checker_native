@@ -27,20 +27,15 @@ public class SearchHistoryManager {
     }
 
     public void add(SearchHistoryData data, SharedPreferences.Editor editor) {
-        int index = -1;
         for (int i = 0; i < searchHistory.size(); i++) {
             if (data.getSummonerName().equals(searchHistory.get(i).getSummonerName()) && data.getPlatform().equals(searchHistory.get(i).getPlatform())) {
-                index = i;
+                searchHistory.get(i).setNewTimeStamp();
+                saveChanges(editor);
+                return;
             }
         }
-        if (index != -1) {
-            searchHistory.remove(index);
-            searchHistory.add(0, data);
-            saveChanges(editor);
-        } else {
-            searchHistory.add(0, data);
-            saveChanges(editor);
-        }
+        searchHistory.add(data);
+        saveChanges(editor);
     }
 
     private void saveChanges(SharedPreferences.Editor editor) {
