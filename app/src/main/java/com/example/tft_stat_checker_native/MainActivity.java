@@ -49,6 +49,7 @@ public class MainActivity extends FragmentActivity {
     TextView searchText;
     TextView changeRegionButton;
     ConstraintLayout searchBar;
+    RecyclerView matchHistoryRecyclerView;
     RecyclerViewListAdapter matchHistoryListAdapter;
 
     // search history
@@ -128,18 +129,18 @@ public class MainActivity extends FragmentActivity {
     }
 
     private void iniRecyclerView() {
-        RecyclerView target = findViewById(R.id.match_history_card_list);
-        target.hasFixedSize();
+        this.matchHistoryRecyclerView = findViewById(R.id.match_history_card_list);
+        this.matchHistoryRecyclerView.hasFixedSize();
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setInitialPrefetchItemCount(10);
-        target.setLayoutManager(layoutManager);
+        this.matchHistoryRecyclerView.setLayoutManager(layoutManager);
 
         this.matchHistoryListAdapter =  new RecyclerViewListAdapter(this, this.requestQueue);
 
-        target.setAdapter(matchHistoryListAdapter);
+        this.matchHistoryRecyclerView.setAdapter(matchHistoryListAdapter);
 
-        target.setVerticalScrollBarEnabled(true);
+        this.matchHistoryRecyclerView.setVerticalScrollBarEnabled(true);
 
         matchHistoryListAdapter.setOnCardClickListener((int position) -> {
 
