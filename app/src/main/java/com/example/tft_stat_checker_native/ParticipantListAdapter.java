@@ -18,6 +18,10 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.example.tft_stat_checker_native.Modal.ParticipantData;
+import com.example.tft_stat_checker_native.Modal.SummonerData;
+import com.example.tft_stat_checker_native.Modal.SummonerRankedData;
+import com.example.tft_stat_checker_native.Modal.TraitData;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -63,11 +67,11 @@ public class ParticipantListAdapter extends RecyclerView.Adapter<ParticipantsVie
         this.platform = platform;
     }
 
-    private ArrayList<Trait> filterTraits(ArrayList<Trait> list) {
-        ArrayList<Trait> re = new ArrayList<>();
-        list.forEach((trait) -> {
-            if (trait.getStyle() != 0) {
-                re.add(trait);
+    private ArrayList<TraitData> filterTraits(ArrayList<TraitData> list) {
+        ArrayList<TraitData> re = new ArrayList<>();
+        list.forEach((traitData) -> {
+            if (traitData.getStyle() != 0) {
+                re.add(traitData);
             }
         });
         return re;

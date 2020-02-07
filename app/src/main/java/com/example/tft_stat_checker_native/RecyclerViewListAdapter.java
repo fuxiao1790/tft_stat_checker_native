@@ -21,6 +21,11 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.example.tft_stat_checker_native.Modal.MatchData;
+import com.example.tft_stat_checker_native.Modal.SummonerData;
+import com.example.tft_stat_checker_native.Modal.SummonerRankedData;
+import com.example.tft_stat_checker_native.Modal.TraitData;
+import com.example.tft_stat_checker_native.Modal.UnitData;
 import com.google.android.flexbox.FlexboxLayout;
 
 import org.json.JSONException;
@@ -38,7 +43,8 @@ public class RecyclerViewListAdapter extends RecyclerView.Adapter<RecyclerViewLi
 
     private ArrayList<MatchData> data;
     private boolean moreToLoad;
-    private ListHeaderData listHeaderData;
+    private SummonerData summonerData;
+    private SummonerRankedData summonerRankedData;
     private RequestQueue requestQueue;
 
     // stores all cards loading state
@@ -76,8 +82,9 @@ public class RecyclerViewListAdapter extends RecyclerView.Adapter<RecyclerViewLi
         this.platform = platform;
     }
 
-    public void setListHeaderData(ListHeaderData listHeaderData) {
-        this.listHeaderData = listHeaderData;
+    public void setListHeaderData(SummonerData summonerData, SummonerRankedData summonerRankedData) {
+        this.summonerData = summonerData;
+        this.summonerRankedData = summonerRankedData;
         notifyItemChanged(0);
     }
 
@@ -117,7 +124,8 @@ public class RecyclerViewListAdapter extends RecyclerView.Adapter<RecyclerViewLi
                 data.remove(i);
             }
         }
-        this.listHeaderData = null;
+        this.summonerData = null;
+        this.summonerRankedData = null;
         this.loadingState.clear();
         this.unitIconsStorage.clear();
         this.traitIconsStorage.clear();
@@ -183,15 +191,15 @@ public class RecyclerViewListAdapter extends RecyclerView.Adapter<RecyclerViewLi
                     break;
                 }
             }
-        } else if (holder instanceof RecyclerViewHeaderViewHolder && this.listHeaderData != null) {
+        } else if (holder instanceof RecyclerViewHeaderViewHolder && this.summonerData != null) {
             // render header here
             RecyclerViewHeaderViewHolder temp = (RecyclerViewHeaderViewHolder) holder;
-            temp.getSummonerName().setText(listHeaderData.getSummonerData().getName());
-            temp.getSummonerRank().setText(listHeaderData.getSummonerRankedData().getSummonerRankString());
-            temp.getWinRate().setText(listHeaderData.getSummonerRankedData().getWinLoseWinRatioString());
-            temp.getQueueType().setText(listHeaderData.getSummonerRankedData().getQueueType());
+            temp.getSummonerName().setText(this.summonerData.getName());
+            temp.getSummonerRank().setText(this.summonerRankedData.getSummonerRankString());
+            temp.getWinRate().setText(this.summonerRankedData.getWinLoseWinRatioString());
+            temp.getQueueType().setText(this.summonerRankedData.getQueueType());
             Glide.with(temp.getSummonerIcon())
-                    .load(Config.playerIconCDN + listHeaderData.getSummonerData().getProfileIconId() + ".png")
+                    .load(Config.playerIconCDN + this.summonerData.getProfileIconId() + ".png")
                     .diskCacheStrategy(DiskCacheStrategy.DATA)
                     .into(temp.getSummonerIcon());
         }
@@ -203,7 +211,6 @@ public class RecyclerViewListAdapter extends RecyclerView.Adapter<RecyclerViewLi
 
         holder.getLoadingIndicator().setVisibility(View.VISIBLE);
 
-        holder.getId().setVisibility(View.GONE);
         holder.getMatchDuration().setVisibility(View.INVISIBLE);
         holder.getMatchDate().setVisibility(View.INVISIBLE);
         holder.getPlacement().setVisibility(View.INVISIBLE);
@@ -216,7 +223,6 @@ public class RecyclerViewListAdapter extends RecyclerView.Adapter<RecyclerViewLi
 
         holder.getLoadingIndicator().setVisibility(View.INVISIBLE);
 
-        holder.getId().setVisibility(View.VISIBLE);
         holder.getMatchDuration().setVisibility(View.VISIBLE);
         holder.getMatchDate().setVisibility(View.VISIBLE);
         holder.getPlacement().setVisibility(View.VISIBLE);
@@ -230,7 +236,6 @@ public class RecyclerViewListAdapter extends RecyclerView.Adapter<RecyclerViewLi
 
         holder.getLoadingIndicator().setVisibility(View.INVISIBLE);
 
-        holder.getId().setVisibility(View.INVISIBLE);
         holder.getMatchDuration().setVisibility(View.INVISIBLE);
         holder.getMatchDate().setVisibility(View.INVISIBLE);
         holder.getPlacement().setVisibility(View.INVISIBLE);
@@ -248,7 +253,6 @@ public class RecyclerViewListAdapter extends RecyclerView.Adapter<RecyclerViewLi
         }
         temp.getMatchDate().setText(data.get(position).getGameDateTimeString());
         temp.getMatchDuration().setText(data.get(position).getGameLengthString());
-        temp.getId().setText(data.get(position).getId());
 
         // reuse stored imageviews if possible
         if (unitIconsStorage.containsKey(data.get(position).getId())) {
@@ -319,7 +323,7 @@ public class RecyclerViewListAdapter extends RecyclerView.Adapter<RecyclerViewLi
         }
     }
 
-    private LayerDrawable getUnitIconDecoration(Unit unit, Context ctx) {
+    private LayerDrawable getUnitIconDecoration(UnitData unit, Context ctx) {
         // background resource = corner
         // foreground resource = bourder + dots
 
@@ -345,8 +349,8 @@ public class RecyclerViewListAdapter extends RecyclerView.Adapter<RecyclerViewLi
         return new LayerDrawable(new Drawable[]{border, tier});
     }
 
-    private int getTraitIconDecoration(Trait trait) {
-        switch(trait.getStyle()) {
+    private int getTraitIconDecoration(TraitData traitData) {
+        switch(traitData.getStyle()) {
             case 1: { return R.drawable.trait_bg_tier1; }
             case 2: { return R.drawable.trait_bg_tier2; }
             case 3: { return R.drawable.trait_bg_tier3; }
@@ -378,7 +382,7 @@ public class RecyclerViewListAdapter extends RecyclerView.Adapter<RecyclerViewLi
                     try {
                         // load data into item
                         JSONObject jsonRes = new JSONObject(res);
-                        data.get(position).loadData(jsonRes, listHeaderData.getSummonerData().getPuuid());
+                        data.get(position).loadData(jsonRes, this.summonerData.getPuuid());
 
                         // set loading state to LOADED
                         loadingState.put(data.get(position).getId(), LOADED);
@@ -420,7 +424,7 @@ public class RecyclerViewListAdapter extends RecyclerView.Adapter<RecyclerViewLi
     @Override
     public int getItemCount() {
         if (data.size() < 3) {
-            if (listHeaderData == null) {
+            if (summonerData == null || summonerRankedData == null) {
                 return 0;
             } else {
                 return 1;
@@ -448,7 +452,6 @@ class RecyclerViewListViewHolder extends RecyclerView.ViewHolder {
 
 class RecyclerViewContentViewHolder extends RecyclerViewListViewHolder implements View.OnClickListener{
     private TextView placement;
-    private TextView id;
     private TextView matchDate;
     private TextView matchDuration;
     private TextView status;
@@ -474,7 +477,6 @@ class RecyclerViewContentViewHolder extends RecyclerViewListViewHolder implement
         this.status = itemView.findViewById(R.id.status);
         this.unitsContainer = itemView.findViewById(R.id.units_container);
         this.traitsContainer = itemView.findViewById(R.id.traits_container);
-        this.id = itemView.findViewById(R.id.id);
         this.container = itemView.findViewById(R.id.container);
         this.loadingIndicator = itemView.findViewById(R.id.loading_indicator);
         itemView.setOnClickListener(this);
@@ -499,9 +501,6 @@ class RecyclerViewContentViewHolder extends RecyclerViewListViewHolder implement
     }
     public TextView getPlacement() {
         return placement;
-    }
-    public TextView getId() {
-        return id;
     }
     @Override
     public void onClick(View view) {
@@ -550,26 +549,4 @@ class RecyclerViewFooterViewHolder extends RecyclerViewListViewHolder {
     public RecyclerViewFooterViewHolder(@NonNull View itemView) {
         super(itemView);
     }
-}
-
-class ListHeaderData {
-    private SummonerData summonerData;
-    private SummonerRankedData summonerRankedData;
-
-    public SummonerData getSummonerData() {
-        return summonerData;
-    }
-
-    public SummonerRankedData getSummonerRankedData() {
-        return summonerRankedData;
-    }
-
-    public ListHeaderData(SummonerData summonerData, SummonerRankedData summonerRankedData) {
-        this.summonerData = summonerData;
-        this.summonerRankedData = summonerRankedData;
-    }
-}
-
-interface OnCardClickListener {
-    void onClick(int position);
 }

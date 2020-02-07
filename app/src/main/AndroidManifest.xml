@@ -11,10 +11,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".EditSearchParams" android:configChanges="orientation|screenSize|keyboardHidden" />
-        <activity android:name=".ViewMatchDetail" android:configChanges="orientation|screenSize|keyboardHidden" />
+        <activity android:name=".View.EditSearchParams" android:configChanges="orientation|screenSize|keyboardHidden" />
+        <activity android:name=".View.ViewMatchDetail" android:configChanges="orientation|screenSize|keyboardHidden" />
         <activity
-            android:name=".MainActivity"
+            android:name=".View.MainActivity"
             android:configChanges="orientation|screenSize|keyboardHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

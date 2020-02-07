@@ -1,7 +1,6 @@
 package com.example.tft_stat_checker_native;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,18 +9,20 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.tft_stat_checker_native.Modal.TraitData;
+
 import java.util.ArrayList;
 
 public class TraitListAdapter extends RecyclerView.Adapter<TraitListViewHolder> {
 
-    private ArrayList<Trait> listData;
+    private ArrayList<TraitData> listData;
     private LayoutInflater itemInflater;
 
     int traitBGTier1 = R.drawable.trait_bg_tier1;
     int traitBGTier2 = R.drawable.trait_bg_tier2;
     int traitBGTier3 = R.drawable.trait_bg_tier3;
 
-    public TraitListAdapter(Context ctx, ArrayList<Trait> listData) {
+    public TraitListAdapter(Context ctx, ArrayList<TraitData> listData) {
         this.listData = listData;
         this.itemInflater = LayoutInflater.from(ctx);
     }

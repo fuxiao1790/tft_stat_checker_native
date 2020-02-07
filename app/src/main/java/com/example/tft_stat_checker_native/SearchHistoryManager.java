@@ -3,6 +3,8 @@ package com.example.tft_stat_checker_native;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import com.example.tft_stat_checker_native.Modal.SearchHistoryData;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

@@ -12,13 +12,14 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.tft_stat_checker_native.Modal.UnitData;
 import com.google.android.flexbox.FlexboxLayout;
 
 import java.util.ArrayList;
 
 public class UnitListAdapter extends RecyclerView.Adapter<UnitViewHolder> {
 
-    private ArrayList<Unit> listData;
+    private ArrayList<UnitData> listData;
     private LayoutInflater itemInflater;
 
     private Drawable unitBorderRarity0;
@@ -32,7 +33,7 @@ public class UnitListAdapter extends RecyclerView.Adapter<UnitViewHolder> {
     private Drawable unitTier2;
     private Drawable unitTier3;
 
-    public UnitListAdapter(Context ctx, ArrayList<Unit> listData) {
+    public UnitListAdapter(Context ctx, ArrayList<UnitData> listData) {
         this.listData = listData;
         this.itemInflater = LayoutInflater.from(ctx);
 
