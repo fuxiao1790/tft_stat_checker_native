@@ -13,7 +13,6 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.example.tft_stat_checker_native.Modal.MatchData;
 import com.example.tft_stat_checker_native.Modal.ParticipantData;
-import com.example.tft_stat_checker_native.ParticipantListAdapter;
 import com.example.tft_stat_checker_native.R;
 
 import org.json.JSONException;

@@ -18,9 +18,9 @@
     import android.widget.LinearLayout;
     import android.widget.TextView;
 
-    import com.example.tft_stat_checker_native.Config;
-    import com.example.tft_stat_checker_native.ListItemOnClickListener;
-    import com.example.tft_stat_checker_native.OnDialogConfirmListener;
+    import com.example.tft_stat_checker_native.Controller.Config;
+    import com.example.tft_stat_checker_native.Controller.ListItemOnClickListener;
+    import com.example.tft_stat_checker_native.Controller.OnDialogConfirmListener;
     import com.example.tft_stat_checker_native.R;
 
     import java.util.ArrayList;

@@ -14,11 +14,10 @@
         <activity android:name=".View.EditSearchParams" android:configChanges="orientation|screenSize|keyboardHidden" />
         <activity android:name=".View.ViewMatchDetail" android:configChanges="orientation|screenSize|keyboardHidden" />
         <activity
-            android:name=".View.MainActivity"
+            android:name=".View.SearchSummoner"
             android:configChanges="orientation|screenSize|keyboardHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
