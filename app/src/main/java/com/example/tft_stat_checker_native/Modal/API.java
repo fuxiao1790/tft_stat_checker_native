@@ -23,7 +23,7 @@ public class API {
         final String data = "/" + name + "?summonerName=" + name;
 
         Log.d("getSummonerByName: ", platformURL + route + data);
-        StringRequest request = new StringRequest(Request.Method.GET, platformURL + route + data, onSuccess, onError) {
+        return new StringRequest(Request.Method.GET, platformURL + route + data, onSuccess, onError) {
             @Override
             public Map<String, String> getHeaders() {
                 Map<String, String> headers = new HashMap<>();
@@ -31,8 +31,6 @@ public class API {
                 return headers;
             }
         };
-
-        return request;
     }
 
     public static StringRequest getSummonerRankedData(String id, String platform, Response.Listener<String> onSuccess, Response.ErrorListener onError) {
@@ -41,7 +39,7 @@ public class API {
         final String data = id;
 
         Log.d("getSummonerRankedData: ", platformURL + route + data);
-        StringRequest request = new StringRequest(Request.Method.GET, platformURL + route + data, onSuccess, onError) {
+        return new StringRequest(Request.Method.GET, platformURL + route + data, onSuccess, onError) {
             @Override
             public Map<String, String> getHeaders() {
                 Map<String, String> headers = new HashMap<>();
@@ -49,8 +47,6 @@ public class API {
                 return headers;
             }
         };
-
-        return request;
     }
 
     public static StringRequest getSummonerByPUUID(String puuid, String platform, Response.Listener<String> onSuccess, Response.ErrorListener onError) {
@@ -59,7 +55,7 @@ public class API {
         final String data = "/" + puuid + "?encryptedPUUID=" + puuid;
 
         Log.d("getSummonerByPUUID", platformURL + route + data);
-        StringRequest request = new StringRequest(Request.Method.GET, platformURL + route + data, onSuccess, onError) {
+        return new StringRequest(Request.Method.GET, platformURL + route + data, onSuccess, onError) {
             @Override
             public Map<String, String> getHeaders() {
                 Map<String, String> headers = new HashMap<>();
@@ -67,17 +63,15 @@ public class API {
                 return headers;
             }
         };
-
-        return request;
     }
 
     public static StringRequest getMatchHistoryList(String puuid, int count, String platform, Response.Listener<String> onSuccess, Response.ErrorListener onError) {
-        final String platformURL = getRegionURLByName(platform);
+        final String regionURL = getRegionURLByName(platform);
         final String route = "/tft/match/v1/matches/by-puuid/";
         final String data = puuid + "/ids?" + "count=" + count;
 
-        Log.d("getMatchHistoryList: ", platformURL + route + data);
-        StringRequest request = new StringRequest(Request.Method.GET, platformURL + route + data, onSuccess, onError) {
+        Log.d("getMatchHistoryList: ", regionURL + route + data);
+        return new StringRequest(Request.Method.GET, regionURL + route + data, onSuccess, onError) {
             @Override
             public Map<String, String> getHeaders() {
                 Map<String, String> headers = new HashMap<>();
@@ -85,17 +79,15 @@ public class API {
                 return headers;
             }
         };
-
-        return request;
     }
 
     public static StringRequest getMatchResultByMatchID(String matchID, String platform, Response.Listener<String> onSuccess, Response.ErrorListener onError) {
-        final String platformURL = getPlatformURLByName(platform);
+        final String regionURL = getRegionURLByName(platform);
         final String route = "/tft/match/v1/matches/";
         final String data = matchID;
 
-        Log.d("getMatchResultByMatchID", platformURL + route + data);
-        StringRequest request = new StringRequest(Request.Method.GET, platformURL + route + data, onSuccess, onError) {
+        Log.d("getMatchResultByMatchID", regionURL + route + data);
+        return new StringRequest(Request.Method.GET, regionURL + route + data, onSuccess, onError) {
             @Override
             public Map<String, String> getHeaders() {
                 Map<String, String> headers = new HashMap<>();
@@ -103,8 +95,6 @@ public class API {
                 return headers;
             }
         };
-
-        return request;
     }
 
     public static void onError(VolleyError error) {
