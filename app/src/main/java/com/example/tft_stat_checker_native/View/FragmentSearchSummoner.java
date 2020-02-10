@@ -43,26 +43,26 @@ public class FragmentSearchSummoner extends Fragment {
     public static final String PLATFORM_RESULT_KEY = "PLATFORM_RESULT_KEY";
     public static final String SEARCH_HISTORY_KEY = "SEARCH_HISTORY_KEY";
 
-    RequestQueue requestQueue;
+    private RequestQueue requestQueue;
 
     // data
-    SummonerData summonerData;
-    SummonerRankedData summonerRankedData;
-    MatchHistoryListData matchHistoryList;
+    private SummonerData summonerData;
+    private SummonerRankedData summonerRankedData;
+    private MatchHistoryListData matchHistoryList;
 
     // text displayed
-    String summonerName = "";
-    String platform = "NA";
+    private String summonerName = "";
+    private String platform = "NA";
 
     // page elements
-    ProgressBar loadingIndicator;
-    TextView summonerNameText;
-    TextView platformText;
-    ConstraintLayout searchBar;
-    RecyclerView matchHistoryRecyclerView;
-    SwipeRefreshLayout pullToRefresh;
-
-    MatchHistoryListAdapter matchHistoryListAdapter;
+    private ProgressBar loadingIndicator;
+    private TextView summonerNameText;
+    private TextView platformText;
+    private ConstraintLayout searchBar;
+    private RecyclerView matchHistoryRecyclerView;
+    private SwipeRefreshLayout pullToRefresh;
+    private LinearLayoutManager matchHistoryListLayoutManager;
+    private MatchHistoryListAdapter matchHistoryListAdapter;
 
     // search history
     private SearchHistoryManager searchHistoryManager;
@@ -109,7 +109,7 @@ public class FragmentSearchSummoner extends Fragment {
                     if (newSearchText.length() > 0) {
                         updateSummonerName(newSearchText);
                         updatePlatform(newPlatform);
-                        refreshData();
+                        loadData();
                     }
                 }
                 break;
@@ -142,7 +142,7 @@ public class FragmentSearchSummoner extends Fragment {
         pullToRefresh.setOnRefreshListener(() -> {
             // do on refresh
             requestQueue.cancelAll((Request<?> request) -> true);
-            refreshData();
+            loadData();
         });
 
         // offset top
@@ -152,14 +152,16 @@ public class FragmentSearchSummoner extends Fragment {
             pullToRefresh.setProgressViewOffset(true, start, start + 200);
             pullToRefresh.setDistanceToTriggerSync(300);
         });
+
+        pullToRefresh.setEnabled(false);
     }
 
     private void iniRecyclerView() {
         matchHistoryRecyclerView.hasFixedSize();
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        layoutManager.setInitialPrefetchItemCount(10);
-        matchHistoryRecyclerView.setLayoutManager(layoutManager);
+        matchHistoryListLayoutManager = new LinearLayoutManager(getActivity());
+        matchHistoryListLayoutManager.setInitialPrefetchItemCount(10);
+        matchHistoryRecyclerView.setLayoutManager(matchHistoryListLayoutManager);
 
         matchHistoryListAdapter =  new MatchHistoryListAdapter(getActivity(), requestQueue);
         matchHistoryRecyclerView.setAdapter(matchHistoryListAdapter);
@@ -198,16 +200,21 @@ public class FragmentSearchSummoner extends Fragment {
     }
 
     private void showLoading() {
-        pullToRefresh.setEnabled(false);
         loadingIndicator.setVisibility(View.VISIBLE);
     }
 
     private void hideLoading() {
-        pullToRefresh.setEnabled(true);
+        if (!pullToRefresh.isEnabled()) {
+            pullToRefresh.setEnabled(true);
+        }
         loadingIndicator.setVisibility(View.INVISIBLE);
     }
 
-    private void refreshData(){
+    private void onRefresh() {
+        loadData();
+    }
+
+    private void loadData(){
         clearData();
         showLoading();
         requestQueue.cancelAll((arg) -> true);
@@ -258,7 +265,6 @@ public class FragmentSearchSummoner extends Fragment {
                 (VolleyError error) -> {
                     API.onError(error);
                     if (error.networkResponse.statusCode == 404) {
-                        pullToRefresh.setRefreshing(false);
                         hideLoading();
                         Toast.makeText(getContext(), "Summoner Not Found", Toast.LENGTH_SHORT).show();
                     } else {
@@ -323,7 +329,6 @@ public class FragmentSearchSummoner extends Fragment {
                         updateMatchHistoryList();
 
                         // set loading indicator
-                        pullToRefresh.setRefreshing(false);
                         hideLoading();
 
                     } catch (JSONException error) {
@@ -339,7 +344,6 @@ public class FragmentSearchSummoner extends Fragment {
     }
 
     private void onNetWorkRequestError(VolleyError error) {
-        pullToRefresh.setRefreshing(false);
         hideLoading();
         Toast.makeText(getContext(), "NetWork Error", Toast.LENGTH_SHORT).show();
     }
@@ -361,5 +365,14 @@ public class FragmentSearchSummoner extends Fragment {
     private void updateSummonerName(String summonerName) {
         this.summonerName = summonerName;
         this.summonerNameText.setText(summonerName);
+    }
+
+    public void onReselect() {
+        if (matchHistoryListLayoutManager.findFirstVisibleItemPosition() > 15) {
+            matchHistoryRecyclerView.scrollToPosition(15);
+            matchHistoryRecyclerView.smoothScrollToPosition(0);
+        } else {
+            matchHistoryRecyclerView.smoothScrollToPosition(0);
+        }
     }
 }

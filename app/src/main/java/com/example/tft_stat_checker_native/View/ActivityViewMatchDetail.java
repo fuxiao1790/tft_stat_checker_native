@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
@@ -36,12 +37,12 @@ public class ActivityViewMatchDetail extends Activity {
         iniRecyclerView();
     }
 
-    public void iniBackButton() {
+    private void iniBackButton() {
         Button backButton = findViewById(R.id.back_button);
         backButton.setOnClickListener((View view) -> finish());
     }
 
-    public void iniMatchData() {
+    private void iniMatchData() {
         Bundle bundle = getIntent().getExtras();
         String message = bundle.getString("matchData");
         this.platform = bundle.getString("platform");
@@ -56,7 +57,7 @@ public class ActivityViewMatchDetail extends Activity {
         }
     }
 
-    public void iniRecyclerView() {
+    private void iniRecyclerView() {
         if (data != null) {
             RecyclerView rv = findViewById(R.id.participant_list);
             rv.setLayoutManager(new LinearLayoutManager(this));

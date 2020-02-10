@@ -50,10 +50,10 @@ public class ActivityEditSearchParam extends FragmentActivity {
     private void iniData() {
         // data from intent
         Bundle bundle = getIntent().getExtras();
-        searchText = bundle.getString(ActivitySearchSummoner.SEARCH_TEXT_RESULT_KEY);
-        platform = bundle.getString(ActivitySearchSummoner.PLATFORM_RESULT_KEY);
+        searchText = bundle.getString(FragmentSearchSummoner.SEARCH_TEXT_RESULT_KEY);
+        platform = bundle.getString(FragmentSearchSummoner.PLATFORM_RESULT_KEY);
         try {
-            searchHistoryData = SearchHistoryManager.buildListFromJSONArray(new JSONArray(bundle.getString(ActivitySearchSummoner.SEARCH_HISTORY_KEY, "")));
+            searchHistoryData = SearchHistoryManager.buildListFromJSONArray(new JSONArray(bundle.getString(FragmentSearchSummoner.SEARCH_HISTORY_KEY, "")));
         } catch(JSONException error) {
             searchHistoryData = new ArrayList<>();
         }
@@ -122,8 +122,8 @@ public class ActivityEditSearchParam extends FragmentActivity {
 
     private void searchButtonOnPress() {
         Intent output = new Intent();
-        output.putExtra(ActivitySearchSummoner.SEARCH_TEXT_RESULT_KEY, this.searchText);
-        output.putExtra(ActivitySearchSummoner.PLATFORM_RESULT_KEY, this.platform);
+        output.putExtra(FragmentSearchSummoner.SEARCH_TEXT_RESULT_KEY, this.searchText);
+        output.putExtra(FragmentSearchSummoner.PLATFORM_RESULT_KEY, this.platform);
         setResult(Activity.RESULT_OK, output);
         finish();
     }

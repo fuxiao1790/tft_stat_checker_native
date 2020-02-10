@@ -151,14 +151,12 @@ public class ActivitySearchSummoner extends Activity {
         matchHistoryRecyclerView.setAdapter(matchHistoryListAdapter);
 
         matchHistoryListAdapter.setListItemOnClickListener((int position) -> {
-
             switch (matchHistoryListAdapter.getItemStatus(position)) {
                 case MatchHistoryListAdapter.FAILED: {
                     matchHistoryListAdapter.reLoadData(position);
                     break;
                 }
                 case MatchHistoryListAdapter.LOADED: {
-                    //Intent viewMatchDetail = new Intent();
                     String data = matchHistoryListAdapter.getMatchDataAt(position).getJson().toString();
                     Intent viewMatchDetail = new Intent(this, ActivityViewMatchDetail.class);
                     viewMatchDetail.putExtra("matchData", data);

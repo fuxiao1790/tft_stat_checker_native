@@ -24,4 +24,8 @@ public class FragmentUnitViewer extends Fragment {
         frag.setArguments(args);
         return frag;
     }
+
+    public void onReselect() {
+
+    }
 }

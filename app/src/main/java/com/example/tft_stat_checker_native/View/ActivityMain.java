@@ -7,23 +7,20 @@ import android.widget.LinearLayout;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.example.tft_stat_checker_native.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-
-import java.util.HashMap;
 
 public class ActivityMain extends FragmentActivity {
     private LinearLayout navContentContainer;
     private BottomNavigationView bottomNav;
 
-    private Fragment searchSummoner;
-    private Fragment itemViewer;
-    private Fragment unitViewer;
+    private FragmentSearchSummoner searchSummoner;
+    private FragmentItemViewer itemViewer;
+    private FragmentUnitViewer unitViewer;
 
     private Fragment activeFragment;
+    private int activeFragmentID;
 
     private static final String SEARCH_SUMMONER_FRAG_ID = "SEARCH_SUMMONER_FRAG_ID";
     private static final String ITEM_VIEWER_FRAG_ID = "ITEM_VIEWER_FRAG_ID";
@@ -47,6 +44,7 @@ public class ActivityMain extends FragmentActivity {
     private void initialNavPage() {
         searchSummoner = FragmentSearchSummoner.createInstance();
         activeFragment = searchSummoner;
+        activeFragmentID = R.id.search_summoner;
         getSupportFragmentManager()
                 .beginTransaction()
                 .add(R.id.nav_content_container, searchSummoner)
@@ -58,9 +56,11 @@ public class ActivityMain extends FragmentActivity {
         if (activeFragment != null) {
             getSupportFragmentManager()
                     .beginTransaction()
+                    .setCustomAnimations(R.anim.fragment_transition_in, R.anim.fragment_transition_out, R.anim.fragment_transition_in, R.anim.fragment_transition_out)
                     .add(R.id.nav_content_container, fragment)
                     .hide(activeFragment)
                     .show(fragment)
+                    .addToBackStack("")
                     .commit();
         }
     }
@@ -68,13 +68,22 @@ public class ActivityMain extends FragmentActivity {
     private void showFragment(Fragment fragment, String tag) {
         getSupportFragmentManager()
                 .beginTransaction()
+                .setCustomAnimations(R.anim.fragment_transition_in, R.anim.fragment_transition_out, R.anim.fragment_transition_in, R.anim.fragment_transition_out)
                 .hide(activeFragment)
                 .show(fragment)
+                .addToBackStack("")
                 .commit();
     }
 
     private void iniBottomNav() {
         bottomNav.setOnNavigationItemSelectedListener((menuItem) -> {
+            // ignore page reselect
+            if (activeFragmentID == menuItem.getItemId()) {
+                return false;
+            }
+            // swap to selected frag
+            // if frag is not yet created
+            // create, add, and swap to frag
             switch(menuItem.getItemId()) {
                 case R.id.search_summoner: {
                     if (searchSummoner == null) {
@@ -83,7 +92,7 @@ public class ActivityMain extends FragmentActivity {
                     } else {
                         showFragment(searchSummoner, SEARCH_SUMMONER_FRAG_ID);
                     }
-
+                    activeFragmentID = R.id.search_summoner;
                     activeFragment = searchSummoner;
                     return true;
                 }
@@ -94,6 +103,7 @@ public class ActivityMain extends FragmentActivity {
                     } else {
                         showFragment(itemViewer, ITEM_VIEWER_FRAG_ID);
                     }
+                    activeFragmentID = R.id.item_viewer;
                     activeFragment = itemViewer;
                     return true;
                 }
@@ -104,11 +114,22 @@ public class ActivityMain extends FragmentActivity {
                     } else {
                         showFragment(unitViewer, UNIT_VIEWER_FRAG_ID);
                     }
+                    activeFragmentID = R.id.unit_viewer;
                     activeFragment = unitViewer;
                     return true;
                 }
             }
             return false;
         });
+
+        bottomNav.setOnNavigationItemReselectedListener((menuItem) -> {
+            switch(menuItem.getItemId()) {
+                case R.id.search_summoner: { searchSummoner.onReselect(); break; }
+                case R.id.item_viewer: { itemViewer.onReselect(); break; }
+                case R.id.unit_viewer: { unitViewer.onReselect(); break; }
+            }
+        });
+
+
     }
 }

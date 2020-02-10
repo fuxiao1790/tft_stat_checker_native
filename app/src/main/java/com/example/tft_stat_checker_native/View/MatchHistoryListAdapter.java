@@ -243,6 +243,8 @@ public class MatchHistoryListAdapter extends RecyclerView.Adapter<MatchHistoryLi
     }
 
     private void renderContent(@NonNull MatchHistoryListViewHolder holder, int position) {
+        final MatchData currentData = data.get(position);
+
         holder.itemView.setOnClickListener((view) -> {
             if (this.listItemOnClickListener != null) {
                 listItemOnClickListener.onItemClicked(position);
@@ -250,18 +252,23 @@ public class MatchHistoryListAdapter extends RecyclerView.Adapter<MatchHistoryLi
         });
 
         MatchHistoryListContentViewHolder temp = (MatchHistoryListContentViewHolder) holder;
-        temp.getPlacement().setText(data.get(position).getPlacement() + "");
-        if (data.get(position).getPlacement() > 4) {
+        // update placement text
+        temp.getPlacement().setText(currentData.getPlacement() + "");
+        if (currentData.getPlacement() > 4) {
             temp.getPlacement().setBackgroundColor(ContextCompat.getColor(temp.getPlacement().getContext(), R.color.placementLost));
         } else {
             temp.getPlacement().setBackgroundColor(ContextCompat.getColor(temp.getPlacement().getContext(), R.color.placementWin));
         }
-        temp.getMatchDate().setText(data.get(position).getGameDateTimeString());
-        temp.getMatchDuration().setText(data.get(position).getGameLengthString());
+
+        // update match date
+        temp.getMatchDate().setText(currentData.getGameDateTimeString());
+
+        // update match duration
+        temp.getMatchDuration().setText(currentData.getGameLengthString());
 
         // reuse stored imageviews if possible
-        if (unitIconsStorage.containsKey(data.get(position).getId())) {
-            ArrayList<ImageView> icons = unitIconsStorage.get(data.get(position).getId());
+        if (unitIconsStorage.containsKey(currentData.getId())) {
+            ArrayList<ImageView> icons = unitIconsStorage.get(currentData.getId());
             for (int i = 0; i < icons.size(); i++) {
                 if (icons.get(i).getParent() != null) {
                     ((FlexboxLayout) icons.get(i).getParent()).removeView(icons.get(i));
@@ -271,10 +278,10 @@ public class MatchHistoryListAdapter extends RecyclerView.Adapter<MatchHistoryLi
         } else {
             ArrayList<ImageView> icons = new ArrayList<>();
             final FlexboxLayout unitIconContainer = ((MatchHistoryListContentViewHolder) holder).getUnitsContainer();
-            for (int i = 0; i < data.get(position).getUnits().size(); i++) {
+            for (int i = 0; i < currentData.getUnits().size(); i++) {
 
                 // get drawable name from data
-                String drawableName = data.get(position).getUnits().get(i).getCharacterID().toLowerCase();
+                String drawableName = currentData.getUnits().get(i).getCharacterID().toLowerCase();
                 ImageView unitIcon = (ImageView) layoutInflater.inflate(R.layout.match_history_list_card_unit_icon, unitIconContainer, false);
                 // get resource id
                 Context ctx = unitIcon.getContext();
@@ -282,17 +289,17 @@ public class MatchHistoryListAdapter extends RecyclerView.Adapter<MatchHistoryLi
 
                 unitIcon.setImageResource(id);
                 unitIcon.setClipToOutline(true);
-                unitIcon.setForeground(this.getUnitIconDecoration(data.get(position).getUnits().get(i), ctx));
+                unitIcon.setForeground(this.getUnitIconDecoration(currentData.getUnits().get(i), ctx));
 
                 icons.add(unitIcon);
                 unitIconContainer.addView(unitIcon);
             }
-            unitIconsStorage.put(data.get(position).getId(), icons);
+            unitIconsStorage.put(currentData.getId(), icons);
         }
 
         // reuse stored imageviews if possible
-        if (traitIconsStorage.containsKey(data.get(position).getId())) {
-            ArrayList<ImageView> icons = traitIconsStorage.get(data.get(position).getId());
+        if (traitIconsStorage.containsKey(currentData.getId())) {
+            ArrayList<ImageView> icons = traitIconsStorage.get(currentData.getId());
             for (int i = 0; i < icons.size(); i++) {
                 if (icons.get(i).getParent() != null) {
                     ((FlexboxLayout) icons.get(i).getParent()).removeView(icons.get(i));
@@ -302,11 +309,11 @@ public class MatchHistoryListAdapter extends RecyclerView.Adapter<MatchHistoryLi
         } else {
             ArrayList<ImageView> icons = new ArrayList<>();
             final FlexboxLayout traitIconContainer = ((MatchHistoryListContentViewHolder) holder).getTraitsContainer();
-            for (int i = 0; i < data.get(position).getTraits().size(); i++) {
-                if (data.get(position).getTraits().get(i).getStyle() != 0) {
+            for (int i = 0; i < currentData.getTraits().size(); i++) {
+                if (currentData.getTraits().get(i).getStyle() != 0) {
 
                     // get drawable name from data
-                    String drawableName = data.get(position).getTraits().get(i).getName().toLowerCase();
+                    String drawableName = currentData.getTraits().get(i).getName().toLowerCase();
 
                     // inflate the imageview
                     ImageView traitIcon = (ImageView) layoutInflater.inflate(R.layout.match_history_list_card_trait_icon, traitIconContainer, false);
@@ -318,13 +325,13 @@ public class MatchHistoryListAdapter extends RecyclerView.Adapter<MatchHistoryLi
                     traitIcon.setImageResource(id);
 
                     // add background
-                    traitIcon.setBackgroundResource(this.getTraitIconDecoration(data.get(position).getTraits().get(i)));
+                    traitIcon.setBackgroundResource(this.getTraitIconDecoration(currentData.getTraits().get(i)));
 
                     icons.add(traitIcon);
                     traitIconContainer.addView(traitIcon);
                 }
             }
-            traitIconsStorage.put(data.get(position).getId(), icons);
+            traitIconsStorage.put(currentData.getId(), icons);
         }
     }
 
