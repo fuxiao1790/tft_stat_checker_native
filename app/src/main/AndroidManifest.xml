@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+<manifest
+    xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.tft_stat_checker_native">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -11,16 +12,20 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".View.EditSearchParams" android:configChanges="orientation|screenSize|keyboardHidden" />
-        <activity android:name=".View.ViewMatchDetail" android:configChanges="orientation|screenSize|keyboardHidden" />
-        <activity
-            android:name=".View.SearchSummoner"
-            android:configChanges="orientation|screenSize|keyboardHidden">
+
+        <activity android:name=".View.ActivityEditSearchParam" android:configChanges="orientation|screenSize|keyboardHidden" />
+
+        <activity android:name=".View.ActivityViewMatchDetail" android:configChanges="orientation|screenSize|keyboardHidden" />
+
+        <activity android:name=".View.ActivitySearchSummoner" android:configChanges="orientation|screenSize|keyboardHidden" />
+
+        <activity android:name=".View.ActivityMain" android:configChanges="orientation|screenSize|keyboardHidden" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
     </application>
 
 </manifest>

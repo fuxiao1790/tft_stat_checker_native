@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/search_summoner"
+        android:icon="@drawable/tft2_ashe"
+        android:title="Summoners" />
+
+    <item
+        android:id="@+id/unit_viewer"
+        android:icon="@drawable/tft2_amumu"
+        android:title="Champions" />
+
+    <item
+        android:id="@+id/item_viewer"
+        android:icon="@drawable/tft2_annie"
+        android:title="Items" />
+
+</menu>
