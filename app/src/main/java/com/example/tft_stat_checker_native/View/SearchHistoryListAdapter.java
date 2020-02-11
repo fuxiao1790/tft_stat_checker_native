@@ -54,7 +54,7 @@ public class SearchHistoryListAdapter extends RecyclerView.Adapter<SearchHistory
         holder.getPlatform().setText(sortedListData.get(position).getPlatform());
 
         if (this.listItemOnClickListener != null) {
-            holder.itemView.setOnClickListener((view) -> listItemOnClickListener.onItemClicked(position));
+            holder.itemView.setOnClickListener((view) -> listItemOnClickListener.onItemClicked(holder.getLayoutPosition()));
         }
     }
 

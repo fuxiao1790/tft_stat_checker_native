@@ -164,26 +164,32 @@ public class MatchHistoryListAdapter extends RecyclerView.Adapter<MatchHistoryLi
     public void onBindViewHolder(@NonNull MatchHistoryListViewHolder holder, int position) {
         // update view based on view type
         if (holder instanceof MatchHistoryListContentViewHolder) {
+            final MatchHistoryListContentViewHolder contentViewHolder = (MatchHistoryListContentViewHolder) holder;
+
+            // set on click listener
+            holder.itemView.setOnClickListener((view) -> {
+                listItemOnClickListener.onItemClicked(holder.getLayoutPosition());
+            });
 
             // if current item has data render item normally
             // else fetch data and update state and notify recylcerview to update
             switch (loadingState.get(data.get(position).getId())) {
                 case MatchHistoryListAdapter.LOADED: {
                     renderContent(holder, position);
-                    showContent((MatchHistoryListContentViewHolder) holder);
+                    showContent(contentViewHolder);
                     break;
                 }
                 case MatchHistoryListAdapter.NONE: {
                     loadCardData(position);
-                    showLoading((MatchHistoryListContentViewHolder) holder);
+                    showLoading(contentViewHolder);
                     break;
                 }
                 case MatchHistoryListAdapter.LOADING: {
-                    showLoading((MatchHistoryListContentViewHolder) holder);
+                    showLoading(contentViewHolder);
                     break;
                 }
                 case MatchHistoryListAdapter.FAILED: {
-                    hideContent((MatchHistoryListContentViewHolder) holder);
+                    hideContent(contentViewHolder);
                     break;
                 }
                 default: {
@@ -244,12 +250,6 @@ public class MatchHistoryListAdapter extends RecyclerView.Adapter<MatchHistoryLi
 
     private void renderContent(@NonNull MatchHistoryListViewHolder holder, int position) {
         final MatchData currentData = data.get(position);
-
-        holder.itemView.setOnClickListener((view) -> {
-            if (this.listItemOnClickListener != null) {
-                listItemOnClickListener.onItemClicked(position);
-            }
-        });
 
         MatchHistoryListContentViewHolder temp = (MatchHistoryListContentViewHolder) holder;
         // update placement text
@@ -462,7 +462,7 @@ class MatchHistoryListViewHolder extends RecyclerView.ViewHolder {
     }
 }
 
-class MatchHistoryListContentViewHolder extends MatchHistoryListViewHolder {
+class MatchHistoryListContentViewHolder extends MatchHistoryListViewHolder{
     private TextView placement;
     private TextView matchDate;
     private TextView matchDuration;
