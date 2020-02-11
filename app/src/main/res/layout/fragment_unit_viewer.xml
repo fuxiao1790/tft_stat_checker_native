@@ -31,13 +31,15 @@
             android:hint="Search by Champion Name"
             android:imeOptions="actionSearch|flagNoExtractUi"
             android:inputType="text"
+            android:paddingTop="6dp"
+            android:paddingBottom="6dp"
             android:selectAllOnFocus="true"
             android:singleLine="true"
             android:textColor="@color/textPrimary"
             android:textColorHint="@color/textHint"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/change_region_button"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -51,8 +53,8 @@
 
                 <padding
                     android:bottom="6dp"
-                    android:left="24sp"
-                    android:right="8dp"
+                    android:left="24dp"
+                    android:right="24dp"
                     android:top="6dp" />
             </shape>
         </aapt:attr>

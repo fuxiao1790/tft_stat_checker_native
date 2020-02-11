@@ -57,7 +57,7 @@ public class ActivityMain extends FragmentActivity {
         if (activeFragment != null) {
             getSupportFragmentManager()
                     .beginTransaction()
-                    .setCustomAnimations(R.anim.fragment_transition_in, R.anim.fragment_transition_out, R.anim.fragment_transition_in, R.anim.fragment_transition_out)
+                    //.setCustomAnimations(R.anim.fragment_transition_in, R.anim.fragment_transition_out, R.anim.fragment_transition_in, R.anim.fragment_transition_out)
                     .add(R.id.nav_content_container, fragment)
                     .hide(activeFragment)
                     .show(fragment)
@@ -68,7 +68,7 @@ public class ActivityMain extends FragmentActivity {
     private void showFragment(Fragment fragment, String tag) {
         getSupportFragmentManager()
                 .beginTransaction()
-                .setCustomAnimations(R.anim.fragment_transition_in, R.anim.fragment_transition_out, R.anim.fragment_transition_in, R.anim.fragment_transition_out)
+                //.setCustomAnimations(R.anim.fragment_transition_in, R.anim.fragment_transition_out, R.anim.fragment_transition_in, R.anim.fragment_transition_out)
                 .hide(activeFragment)
                 .show(fragment)
                 .commit();

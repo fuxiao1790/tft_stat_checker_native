@@ -68,8 +68,6 @@ public class UnitListAdapter extends RecyclerView.Adapter<UnitViewHolder> {
         int id = ctx.getResources().getIdentifier(drawableName, "drawable", ctx.getPackageName());
         unitIcon.setImageResource(id);
 
-        unitIcon.setClipToOutline(true);
-
         // background resource = corner
         // foreground resource = border + tier
         unitIcon.setBackgroundResource(R.drawable.unit_corner);
@@ -130,6 +128,7 @@ class UnitViewHolder extends RecyclerView.ViewHolder {
         super(itemView);
         this.unitIcon = itemView.findViewById(R.id.unit_icon);
         this.itemIconContainer = itemView.findViewById(R.id.item_icon_container);
+        this.unitIcon.setClipToOutline(true);
     }
 
     public ImageView getUnitIcon() {
