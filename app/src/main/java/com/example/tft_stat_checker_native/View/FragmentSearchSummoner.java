@@ -167,7 +167,6 @@ public class FragmentSearchSummoner extends Fragment {
         matchHistoryRecyclerView.setAdapter(matchHistoryListAdapter);
 
         matchHistoryListAdapter.setListItemOnClickListener((int position) -> {
-
             switch (matchHistoryListAdapter.getItemStatus(position)) {
                 case MatchHistoryListAdapter.FAILED: {
                     matchHistoryListAdapter.reLoadData(position);
@@ -207,6 +206,7 @@ public class FragmentSearchSummoner extends Fragment {
         if (!pullToRefresh.isEnabled()) {
             pullToRefresh.setEnabled(true);
         }
+        pullToRefresh.setRefreshing(false);
         loadingIndicator.setVisibility(View.INVISIBLE);
     }
 

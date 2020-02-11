@@ -7,6 +7,7 @@ import android.widget.LinearLayout;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 
 import com.example.tft_stat_checker_native.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -60,7 +61,6 @@ public class ActivityMain extends FragmentActivity {
                     .add(R.id.nav_content_container, fragment)
                     .hide(activeFragment)
                     .show(fragment)
-                    .addToBackStack("")
                     .commit();
         }
     }
@@ -71,19 +71,19 @@ public class ActivityMain extends FragmentActivity {
                 .setCustomAnimations(R.anim.fragment_transition_in, R.anim.fragment_transition_out, R.anim.fragment_transition_in, R.anim.fragment_transition_out)
                 .hide(activeFragment)
                 .show(fragment)
-                .addToBackStack("")
                 .commit();
     }
 
     private void iniBottomNav() {
+        // swap to selected frag on click
+        // if frag is not yet created
+        // create, add, and swap to frag
         bottomNav.setOnNavigationItemSelectedListener((menuItem) -> {
             // ignore page reselect
+            // reselect is handled below
             if (activeFragmentID == menuItem.getItemId()) {
                 return false;
             }
-            // swap to selected frag
-            // if frag is not yet created
-            // create, add, and swap to frag
             switch(menuItem.getItemId()) {
                 case R.id.search_summoner: {
                     if (searchSummoner == null) {
@@ -122,6 +122,7 @@ public class ActivityMain extends FragmentActivity {
             return false;
         });
 
+        // handle page reselected
         bottomNav.setOnNavigationItemReselectedListener((menuItem) -> {
             switch(menuItem.getItemId()) {
                 case R.id.search_summoner: { searchSummoner.onReselect(); break; }
@@ -130,6 +131,13 @@ public class ActivityMain extends FragmentActivity {
             }
         });
 
+        // update page indicator when pressing
+        // back button to navigate between pages
+        getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
+            @Override
+            public void onBackStackChanged() {
 
+            }
+        });
     }
 }

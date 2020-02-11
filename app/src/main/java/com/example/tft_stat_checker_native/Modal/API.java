@@ -124,11 +124,27 @@ public class API {
             case "EUW": return "https://euw1.api.riotgames.com";
             case "JP": return "https://jp1.api.riotgames.com";
             case "KR": return "https://kr.api.riotgames.com";
-            case "LAS": return "https://la1.api.riotgames.com";
+            case "LA": return "https://la1.api.riotgames.com";
             case "OC": return "https://oc1.api.riotgames.com";
             case "TR": return "https://tr1.api.riotgames.com";
             case "RU": return "https://ru.api.riotgames.com";
             case "NA": return "https://na1.api.riotgames.com";
+        }
+        return "";
+    }
+
+    public static String getPlatformDisplayName(String name) {
+        switch(name) {
+            case "BR": return "Brazil";
+            case "EUNE": return "EU Nordic / East";
+            case "EUW": return "EW West";
+            case "JP": return "Japan";
+            case "KR": return "Korea";
+            case "LA": return "Latin America";
+            case "OC": return "Oceania";
+            case "TR": return "Turkey";
+            case "RU": return "Russia";
+            case "NA": return "North America";
         }
         return "";
     }

@@ -3,17 +3,22 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingVertical="8dp"
     android:background="@drawable/click_ripple_bg"
     android:id="@+id/region_list_item_container"
     >
 
     <TextView
+        android:paddingVertical="8dp"
         android:id="@+id/region_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="24dp"
+        android:textSize="18dp"
         android:textColor="@color/textPrimary"
         android:textAlignment="center"
         android:text="TextView" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorPrimaryLight" />
 </LinearLayout>

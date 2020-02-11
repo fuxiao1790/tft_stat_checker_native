@@ -127,7 +127,7 @@
 
         @Override
         public void onBindViewHolder(@NonNull RegionListViewHolder holder, int position) {
-            holder.getRegionText().setText(regions.get(position));
+            holder.getRegionText().setText(API.getPlatformDisplayName(regions.get(position)));
             if (position == this.highLightedItem) {
                 holder.getContainer().setBackgroundResource(R.drawable.click_ripple_bg_light);
             } else {
