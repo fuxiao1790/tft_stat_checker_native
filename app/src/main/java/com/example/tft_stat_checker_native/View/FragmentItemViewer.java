@@ -28,4 +28,8 @@ public class FragmentItemViewer extends Fragment {
     public void onReselect() {
 
     }
+
+    public boolean onBackPressed() {
+        return false;
+    }
 }

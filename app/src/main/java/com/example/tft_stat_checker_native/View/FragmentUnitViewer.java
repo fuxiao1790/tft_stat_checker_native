@@ -1,14 +1,15 @@
 package com.example.tft_stat_checker_native.View;
 
 import android.content.Context;
-import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridLayout;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,7 +18,6 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SortedList;
 
@@ -37,9 +37,10 @@ public class FragmentUnitViewer extends Fragment {
     private RecyclerView championsList;
     private ChampionListAdapter listAdapter;
     private GridLayoutManager layoutManager;
+    private EditText searchTextField;
 
     // data
-    private ArrayList<ChampionData> champions;
+    private ArrayList<ChampionData> allChampions;
 
     @Nullable
     @Override
@@ -47,6 +48,7 @@ public class FragmentUnitViewer extends Fragment {
         View contentView = inflater.inflate(R.layout.fragment_unit_viewer, container, false);
         iniComponents(contentView);
         iniRecyclerView();
+        iniSearchBar();
         return contentView;
     }
 
@@ -54,9 +56,9 @@ public class FragmentUnitViewer extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
-            this.champions = ChampionData.buildListFromJSON(new JSONArray(JSONResourceReader.readResource(R.raw.champions, getContext())));
+            this.allChampions = ChampionData.buildListFromJSON(new JSONArray(JSONResourceReader.readResource(R.raw.champions, getContext())));
         } catch (JSONException err) {
-            this.champions = new ArrayList<>();
+            this.allChampions = new ArrayList<>();
         }
     }
 
@@ -69,16 +71,41 @@ public class FragmentUnitViewer extends Fragment {
 
     private void iniComponents(View view) {
         this.championsList = view.findViewById(R.id.champions_list);
-        this.listAdapter = new ChampionListAdapter(getContext(), champions);
-        this.layoutManager = new GridLayoutManager(getContext(), 3);
+        this.listAdapter = new ChampionListAdapter(getContext(), allChampions);
+        this.layoutManager = new GridLayoutManager(getContext(), 3, GridLayoutManager.VERTICAL, false);
+        this.searchTextField = view.findViewById(R.id.search_text);
     }
 
     private void iniRecyclerView() {
-        this.championsList.addItemDecoration(new ChampionListItemDecoration());
         this.championsList.setLayoutManager(layoutManager);
         this.championsList.setAdapter(listAdapter);
         this.championsList.hasFixedSize();
         this.listAdapter.setListItemOnClickListener((index) -> Log.d("Champion List", "index: " + index));
+    }
+
+    private void iniSearchBar() {
+        this.searchTextField.addTextChangedListener(new TextWatcher() {
+            @Override public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
+            @Override public void afterTextChanged(Editable editable) { }
+            @Override public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                ArrayList<ChampionData> filteredData = new ArrayList<>();
+                allChampions.forEach((championData) -> {
+                    if (championData.match(searchTextField.getText().toString())) {
+                        filteredData.add(championData);
+                    }
+                });
+                listAdapter.replaceAll(filteredData);
+            }
+        });
+    }
+
+    public boolean onBackPressed() {
+        if (searchTextField.getText().toString().length() == 0) {
+            return false;
+        } else {
+            searchTextField.setText("");
+            return true;
+        }
     }
 
     public void onReselect() {
@@ -180,13 +207,5 @@ class ChampionListViewHolder extends RecyclerView.ViewHolder {
 
     public TextView getChampionName() {
         return championName;
-    }
-}
-
-class ChampionListItemDecoration extends RecyclerView.ItemDecoration {
-    @Override
-    public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
-        outRect.top = 16;
-        outRect.bottom = 16;
     }
 }

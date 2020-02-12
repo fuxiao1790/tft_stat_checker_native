@@ -48,4 +48,16 @@ public class ChampionData {
     public int compareTo(ChampionData other) {
         return champion.compareTo(other.getChampion());
     }
+
+    public boolean match(String keyword) {
+        if (champion.toLowerCase().contains(keyword.toLowerCase())) {
+            return true;
+        }
+        for (int i = 0; i < traits.size(); i++) {
+            if (traits.get(i).toLowerCase().contains(keyword.toLowerCase())) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

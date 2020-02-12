@@ -130,14 +130,22 @@ public class ActivityMain extends FragmentActivity {
                 case R.id.unit_viewer: { unitViewer.onReselect(); break; }
             }
         });
+    }
 
-        // update page indicator when pressing
-        // back button to navigate between pages
-        getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
-            @Override
-            public void onBackStackChanged() {
-
+    @Override
+    public void onBackPressed() {
+        if (activeFragment instanceof FragmentUnitViewer) {
+            if (!((FragmentUnitViewer) activeFragment).onBackPressed()) {
+                super.onBackPressed();
             }
-        });
+        } else if (activeFragment instanceof FragmentItemViewer) {
+            if (!((FragmentItemViewer) activeFragment).onBackPressed()) {
+                super.onBackPressed();
+            }
+        } else if (activeFragment instanceof  FragmentSearchSummoner) {
+            if (!((FragmentSearchSummoner) activeFragment).onBackPressed()) {
+                super.onBackPressed();
+            }
+        }
     }
 }

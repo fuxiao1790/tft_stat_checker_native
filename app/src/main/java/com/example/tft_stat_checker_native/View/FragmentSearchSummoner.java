@@ -375,4 +375,8 @@ public class FragmentSearchSummoner extends Fragment {
             matchHistoryRecyclerView.smoothScrollToPosition(0);
         }
     }
+
+    public boolean onBackPressed() {
+        return false;
+    }
 }

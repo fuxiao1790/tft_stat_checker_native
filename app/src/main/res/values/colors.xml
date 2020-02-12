@@ -22,7 +22,7 @@
 
     <color name="changeRegionButtonBG">#2A2F3A</color>
 
-    <color name="unitBorderRarity0">#808080</color>
+    <color name="unitBorderRarity0">#606060</color>
     <color name="unitBorderRarity1">#11B288</color>
     <color name="unitBorderRarity2">#207AC7</color>
     <color name="unitBorderRarity3">#C440DA</color>

@@ -28,11 +28,9 @@
             android:layout_height="wrap_content"
             android:background="@null"
             android:gravity="center|left"
-            android:hint="Search by Champion Name"
+            android:hint="Search by Champion Name / Trait"
             android:imeOptions="actionSearch|flagNoExtractUi"
             android:inputType="text"
-            android:paddingTop="6dp"
-            android:paddingBottom="6dp"
             android:selectAllOnFocus="true"
             android:singleLine="true"
             android:textColor="@color/textPrimary"
@@ -43,21 +41,40 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <aapt:attr name="android:background">
-
+        <aapt:attr name="android:background" >
             <shape xmlns:android="http://schemas.android.com/apk/res/android">
-
-                <solid android:color="@color/colorPrimaryLight" />
-
-                <corners android:radius="50dp" />
-
-                <padding
-                    android:bottom="6dp"
-                    android:left="24dp"
-                    android:right="24dp"
-                    android:top="6dp" />
+                <solid android:color="@color/colorPrimaryLight"/>
+                <corners android:radius="50dp"/>
+                <padding android:left="24sp" android:top="6dp" android:right="8dp" android:bottom="6dp" />
             </shape>
         </aapt:attr>
+
+        <TextView
+            android:id="@+id/filters"
+            android:layout_width="wrap_content"
+            android:layout_height="38dp"
+            android:paddingTop="0dp"
+            android:paddingBottom="0dp"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:text="Filters"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            android:textColor="@color/textPrimary"
+            android:gravity="center"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            xmlns:aapt="http://schemas.android.com/aapt"
+            >
+            <aapt:attr name="android:background" >
+                <shape xmlns:android="http://schemas.android.com/apk/res/android">
+                    <solid android:color="@color/changeRegionButtonBG"/>
+                    <corners android:radius="50dp"/>
+                    <padding android:left="16dp" android:top="16dp" android:right="16dp" android:bottom="16dp" />
+                </shape>
+            </aapt:attr>
+        </TextView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -65,8 +82,8 @@
         android:id="@+id/champions_list"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
