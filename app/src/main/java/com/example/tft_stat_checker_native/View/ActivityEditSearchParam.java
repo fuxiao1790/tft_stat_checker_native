@@ -89,7 +89,7 @@ public class ActivityEditSearchParam extends FragmentActivity {
         changeRegionButton.setText(this.platform);
 
         changeRegionButton.setOnClickListener((view) -> {
-            ChangeRegionDialog changeRegionDialog = new ChangeRegionDialog();
+            ChangeRegionBottomSheet changeRegionDialog = new ChangeRegionBottomSheet();
             changeRegionDialog.setDefaultHighlightedItem(platform);
             changeRegionDialog.setOnDialogConfirmListener((platform) -> updatePlatform(platform));
             changeRegionDialog.show(getSupportFragmentManager(), "wtf?");

@@ -79,6 +79,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.recyclerview.widget.RecyclerView
+        android:focusableInTouchMode="true"
         android:id="@+id/champions_list"
         android:layout_width="0dp"
         android:layout_height="0dp"

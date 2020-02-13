@@ -3,17 +3,17 @@
 
     <item
         android:id="@+id/search_summoner"
-        android:icon="@drawable/tft2_ashe"
+        android:icon="@drawable/crystal"
         android:title="Summoners" />
 
     <item
         android:id="@+id/unit_viewer"
-        android:icon="@drawable/tft2_amumu"
+        android:icon="@drawable/wind"
         android:title="Champions" />
 
     <item
         android:id="@+id/item_viewer"
-        android:icon="@drawable/tft2_annie"
+        android:icon="@drawable/set2_ranger"
         android:title="Items" />
 
 </menu>

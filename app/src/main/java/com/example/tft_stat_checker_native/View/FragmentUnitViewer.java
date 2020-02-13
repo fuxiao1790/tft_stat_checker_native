@@ -5,7 +5,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +23,8 @@ import androidx.recyclerview.widget.SortedList;
 import com.example.tft_stat_checker_native.Controller.ListItemOnClickListener;
 import com.example.tft_stat_checker_native.Modal.ChampionData;
 import com.example.tft_stat_checker_native.Modal.JSONResourceReader;
+import com.example.tft_stat_checker_native.Modal.TraitData;
+import com.example.tft_stat_checker_native.Modal.TraitDetailData;
 import com.example.tft_stat_checker_native.R;
 
 import org.json.JSONArray;
@@ -34,13 +35,17 @@ import java.util.ArrayList;
 public class FragmentUnitViewer extends Fragment {
 
     // page components
-    private RecyclerView championsList;
+    private RecyclerView championsRecyclerView;
     private ChampionListAdapter listAdapter;
     private GridLayoutManager layoutManager;
     private EditText searchTextField;
+    private TextView filterButton;
+    private EditUnitFilterBottomSheet unitFilterEditor;
 
     // data
-    private ArrayList<ChampionData> allChampions;
+    private ArrayList<TraitData> allTraitsDetailData;
+    private ArrayList<ChampionData> allChampionData;
+    private ArrayList<ChampionData> filteredAllChampionData;
 
     @Nullable
     @Override
@@ -49,6 +54,7 @@ public class FragmentUnitViewer extends Fragment {
         iniComponents(contentView);
         iniRecyclerView();
         iniSearchBar();
+        iniFilterButton();
         return contentView;
     }
 
@@ -56,9 +62,14 @@ public class FragmentUnitViewer extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
-            this.allChampions = ChampionData.buildListFromJSON(new JSONArray(JSONResourceReader.readResource(R.raw.champions, getContext())));
+            this.allChampionData = ChampionData.buildListFromJSON(new JSONArray(JSONResourceReader.readResource(R.raw.champions, getContext())));
+            this.allTraitsDetailData = TraitDetailData.buildListFromJSON(new JSONArray(JSONResourceReader.readResource(R.raw.traits, getContext())));
+            this.filteredAllChampionData = new ArrayList<>();
+            this.filteredAllChampionData.addAll(allChampionData);
+            this.unitFilterEditor = new EditUnitFilterBottomSheet();
         } catch (JSONException err) {
-            this.allChampions = new ArrayList<>();
+            this.allChampionData = new ArrayList<>();
+            this.filteredAllChampionData = new ArrayList<>();
         }
     }
 
@@ -70,17 +81,18 @@ public class FragmentUnitViewer extends Fragment {
     }
 
     private void iniComponents(View view) {
-        this.championsList = view.findViewById(R.id.champions_list);
-        this.listAdapter = new ChampionListAdapter(getContext(), allChampions);
-        this.layoutManager = new GridLayoutManager(getContext(), 3, GridLayoutManager.VERTICAL, false);
+        this.championsRecyclerView = view.findViewById(R.id.champions_list);
+        this.listAdapter = new ChampionListAdapter(getContext(), allChampionData);
+        this.layoutManager = new GridLayoutManager(getContext(), 4, GridLayoutManager.VERTICAL, false);
         this.searchTextField = view.findViewById(R.id.search_text);
+        this.filterButton = view.findViewById(R.id.filters);
     }
 
     private void iniRecyclerView() {
-        this.championsList.setLayoutManager(layoutManager);
-        this.championsList.setAdapter(listAdapter);
-        this.championsList.hasFixedSize();
-        this.listAdapter.setListItemOnClickListener((index) -> Log.d("Champion List", "index: " + index));
+        this.championsRecyclerView.setLayoutManager(layoutManager);
+        this.championsRecyclerView.setAdapter(listAdapter);
+        this.championsRecyclerView.hasFixedSize();
+        this.listAdapter.setListItemOnClickListener((index) -> viewChampionDetail(listAdapter.getListItemAt(index)));
     }
 
     private void iniSearchBar() {
@@ -89,7 +101,7 @@ public class FragmentUnitViewer extends Fragment {
             @Override public void afterTextChanged(Editable editable) { }
             @Override public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 ArrayList<ChampionData> filteredData = new ArrayList<>();
-                allChampions.forEach((championData) -> {
+                filteredAllChampionData.forEach((championData) -> {
                     if (championData.match(searchTextField.getText().toString())) {
                         filteredData.add(championData);
                     }
@@ -97,6 +109,16 @@ public class FragmentUnitViewer extends Fragment {
                 listAdapter.replaceAll(filteredData);
             }
         });
+    }
+
+    private void iniFilterButton() {
+        filterButton.setOnClickListener((view) -> {
+            unitFilterEditor.show(getFragmentManager(), "unitFilterEditor");
+        });
+    }
+
+    private void viewChampionDetail(ChampionData data) {
+
     }
 
     public boolean onBackPressed() {
@@ -139,6 +161,10 @@ class ChampionListAdapter extends RecyclerView.Adapter<ChampionListViewHolder>{
 
     public void replaceAll(ArrayList<ChampionData> list) {
         sortedListData.replaceAll(list);
+    }
+
+    public ChampionData getListItemAt(int index) {
+        return sortedListData.get(index);
     }
 
     public ChampionListAdapter(Context context, ArrayList<ChampionData> list) {

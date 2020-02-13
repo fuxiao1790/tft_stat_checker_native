@@ -12,7 +12,7 @@
         android:id="@+id/region_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="18dp"
+        android:textSize="24dp"
         android:textColor="@color/textPrimary"
         android:textAlignment="center"
         android:text="TextView" />
