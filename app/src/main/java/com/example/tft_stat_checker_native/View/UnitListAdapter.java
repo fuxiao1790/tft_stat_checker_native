@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.tft_stat_checker_native.Controller.ListItemOnClickListener;
 import com.example.tft_stat_checker_native.Modal.UnitData;
 import com.example.tft_stat_checker_native.R;
 import com.google.android.flexbox.FlexboxLayout;
@@ -34,9 +35,12 @@ public class UnitListAdapter extends RecyclerView.Adapter<UnitViewHolder> {
     private Drawable unitTier2;
     private Drawable unitTier3;
 
+    private ListItemOnClickListener listItemOnClickListener;
+
     public UnitListAdapter(Context ctx, ArrayList<UnitData> listData) {
         this.listData = listData;
         this.itemInflater = LayoutInflater.from(ctx);
+
 
         this.unitBorderRarity0 = ContextCompat.getDrawable(ctx, R.drawable.unit_border_rarity0);
         this.unitBorderRarity1 = ContextCompat.getDrawable(ctx, R.drawable.unit_border_rarity1);
@@ -50,6 +54,10 @@ public class UnitListAdapter extends RecyclerView.Adapter<UnitViewHolder> {
         this.unitTier3 = ContextCompat.getDrawable(ctx, R.drawable.unit_tier3);
     }
 
+    public void setListItemOnClickListener(ListItemOnClickListener listItemOnClickListener) {
+        this.listItemOnClickListener = listItemOnClickListener;
+    }
+
     @NonNull
     @Override
     public UnitViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -58,6 +66,11 @@ public class UnitListAdapter extends RecyclerView.Adapter<UnitViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull UnitViewHolder holder, int position) {
+        // on click listener
+        if (this.listItemOnClickListener != null) {
+            holder.itemView.setOnClickListener((view) -> holder.getLayoutPosition());
+        }
+
         // get drawable name from data
         String drawableName = listData.get(position).getCharacterID().toLowerCase();
 

@@ -63,7 +63,6 @@ public class ParticipantListAdapter extends RecyclerView.Adapter<ParticipantsVie
             // construct loading status for summoner data / summoner ranked data
             loadingStatus.put(participantData.getPuuid(), NONE);
         });
-
     }
 
     public void setPlatform(String platform) {

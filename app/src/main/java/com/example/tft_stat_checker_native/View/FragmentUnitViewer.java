@@ -1,6 +1,7 @@
 package com.example.tft_stat_checker_native.View;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
@@ -43,7 +44,6 @@ public class FragmentUnitViewer extends Fragment {
     private EditUnitFilterBottomSheet unitFilterEditor;
 
     // data
-    private ArrayList<TraitData> allTraitsDetailData;
     private ArrayList<ChampionData> allChampionData;
     private ArrayList<ChampionData> filteredAllChampionData;
 
@@ -63,7 +63,6 @@ public class FragmentUnitViewer extends Fragment {
         super.onCreate(savedInstanceState);
         try {
             this.allChampionData = ChampionData.buildListFromJSON(new JSONArray(JSONResourceReader.readResource(R.raw.champions, getContext())));
-            this.allTraitsDetailData = TraitDetailData.buildListFromJSON(new JSONArray(JSONResourceReader.readResource(R.raw.traits, getContext())));
             this.filteredAllChampionData = new ArrayList<>();
             this.filteredAllChampionData.addAll(allChampionData);
             this.unitFilterEditor = new EditUnitFilterBottomSheet();
@@ -118,7 +117,9 @@ public class FragmentUnitViewer extends Fragment {
     }
 
     private void viewChampionDetail(ChampionData data) {
-
+        Intent viewChampionDetail = new Intent(getActivity(), ActivityViewChampionDetail.class);
+        viewChampionDetail.putExtra("championData", data.toJSON().toString());
+        startActivity(viewChampionDetail);
     }
 
     public boolean onBackPressed() {

@@ -10,11 +10,13 @@ public class ChampionData {
     private String champion;
     private int cost;
     private ArrayList<String> traits;
+    private JSONObject json;
 
     public ChampionData(JSONObject json) throws JSONException {
         this.champion = json.getString("champion");
         this.cost = json.getInt("cost");
         this.traits = new ArrayList<>();
+        this.json = json;
         JSONArray temp = json.getJSONArray("traits");
         for (int i = 0; i < temp.length(); i++) {
             traits.add(temp.getString(i));
@@ -31,6 +33,10 @@ public class ChampionData {
         } catch(JSONException err) {
             return list;
         }
+    }
+
+    public JSONObject toJSON() {
+        return json;
     }
 
     public String getChampion() {

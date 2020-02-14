@@ -29,11 +29,11 @@ public class TraitDetailData {
         }
     }
 
-    public static ArrayList<TraitData> buildListFromJSON(JSONArray list) {
+    public static ArrayList<TraitDetailData> buildListFromJSON(JSONArray list) {
         try {
-            ArrayList<TraitData> re = new ArrayList<>();
+            ArrayList<TraitDetailData> re = new ArrayList<>();
             for (int i = 0; i < list.length(); i++) {
-                re.add(new TraitData(list.getJSONObject(i)));
+                re.add(new TraitDetailData(list.getJSONObject(i)));
             }
             return re;
         } catch(JSONException err) {
