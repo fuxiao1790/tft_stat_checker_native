@@ -4,8 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,14 +22,18 @@ import androidx.recyclerview.widget.SortedList;
 import com.example.tft_stat_checker_native.Controller.ListItemOnClickListener;
 import com.example.tft_stat_checker_native.Modal.ChampionData;
 import com.example.tft_stat_checker_native.Modal.JSONResourceReader;
-import com.example.tft_stat_checker_native.Modal.TraitData;
-import com.example.tft_stat_checker_native.Modal.TraitDetailData;
 import com.example.tft_stat_checker_native.R;
+import com.jakewharton.rxbinding3.view.RxView;
+import com.jakewharton.rxbinding3.widget.RxCompoundButton;
+import com.jakewharton.rxbinding3.widget.RxTextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.concurrent.TimeUnit;
+import io.reactivex.schedulers.Schedulers;
 
 public class FragmentUnitViewer extends Fragment {
 
@@ -95,25 +97,23 @@ public class FragmentUnitViewer extends Fragment {
     }
 
     private void iniSearchBar() {
-        this.searchTextField.addTextChangedListener(new TextWatcher() {
-            @Override public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
-            @Override public void afterTextChanged(Editable editable) { }
-            @Override public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                ArrayList<ChampionData> filteredData = new ArrayList<>();
-                filteredAllChampionData.forEach((championData) -> {
-                    if (championData.match(searchTextField.getText().toString())) {
-                        filteredData.add(championData);
-                    }
+        RxTextView.textChanges(this.searchTextField)
+                .debounce(200, TimeUnit.MILLISECONDS)
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.computation())
+                .subscribe((charSequence) -> {
+                    ArrayList<ChampionData> filteredData = new ArrayList<>();
+                    filteredAllChampionData.forEach((championData) -> {
+                        if (championData.match(searchTextField.getText().toString())) {
+                            filteredData.add(championData);
+                        }
+                    });
+                    getActivity().runOnUiThread(() -> listAdapter.replaceAll(filteredData));
                 });
-                listAdapter.replaceAll(filteredData);
-            }
-        });
     }
 
     private void iniFilterButton() {
-        filterButton.setOnClickListener((view) -> {
-            unitFilterEditor.show(getFragmentManager(), "unitFilterEditor");
-        });
+        RxView.clicks(filterButton).subscribe((view) -> unitFilterEditor.show(getFragmentManager(), "unitFilterEditor"));
     }
 
     private void viewChampionDetail(ChampionData data) {

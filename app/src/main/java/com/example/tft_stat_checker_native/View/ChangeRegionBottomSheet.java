@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.AttributeSet;
 import android.view.LayoutInflater;
 
 import androidx.annotation.NonNull;
@@ -23,10 +24,11 @@ import com.example.tft_stat_checker_native.Controller.ListItemOnClickListener;
 import com.example.tft_stat_checker_native.Controller.OnDialogConfirmListener;
 import com.example.tft_stat_checker_native.Modal.API;
 import com.example.tft_stat_checker_native.R;
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.util.ArrayList;
 
-public class ChangeRegionBottomSheet extends DialogFragment {
+public class ChangeRegionBottomSheet extends BottomSheetDialogFragment {
     private OnDialogConfirmListener onDialogConfirmListener;
     private String selectedRegion = "";
 
@@ -81,16 +83,16 @@ public class ChangeRegionBottomSheet extends DialogFragment {
         adapter.setHighLightedItem(this.selectedRegion);
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        Dialog dialog = getDialog();
-        if (dialog != null) {
-            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        }
-    }
+//    @Override
+//    public void onStart() {
+//        super.onStart();
+//
+//        Dialog dialog = getDialog();
+//        if (dialog != null) {
+//            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+//            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+//        }
+//    }
 }
 
 class RegionListAdapter extends RecyclerView.Adapter<RegionListViewHolder> {

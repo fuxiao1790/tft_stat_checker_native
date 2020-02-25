@@ -29,6 +29,8 @@ public class BottomSheetRecyclerView extends RecyclerView {
     @Override
     public boolean onTouchEvent(MotionEvent e) {
         getParent().requestDisallowInterceptTouchEvent(true);
-        return super.onTouchEvent(e);
+        boolean re = super.onTouchEvent(e);
+        getParent().requestDisallowInterceptTouchEvent(true);
+        return re;
     }
 }

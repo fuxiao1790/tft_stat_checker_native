@@ -32,17 +32,6 @@
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-    <LinearLayout
-        android:id="@+id/linearLayout2"
-        android:layout_width="0px"
-        android:layout_height="0px"
-        android:clickable="true"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        app:layout_constraintBottom_toBottomOf="@+id/match_history_card_list_container"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/search_bar_container"
         android:layout_width="match_parent"
@@ -55,19 +44,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:elevation="10dp">
-
-        <TextView
-            android:id="@+id/search_text"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:gravity="center|left"
-            android:text="Search by Summoner Name"
-            android:textColor="@color/textHint"
-            android:textSize="18sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/platform_text"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
         <aapt:attr name="android:background" >
             <shape xmlns:android="http://schemas.android.com/apk/res/android">
@@ -103,6 +79,20 @@
                 </shape>
             </aapt:attr>
         </TextView>
+
+        <TextView
+            android:id="@+id/search_text"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:gravity="center|left"
+            android:text="Search by Summoner Name"
+            android:textColor="@color/textHint"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/platform_text"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ProgressBar
