@@ -23,7 +23,7 @@ public class TraitData {
         this.numUnits = trait.getInt("num_units");
         this.style = trait.getInt("style");
         this.tierCurrent = trait.getInt("tier_current");
-        this.tierTotal = trait.getInt("tier_total");
+        try { this.tierTotal = trait.getInt("tier_total"); } catch(JSONException e) { this.tierTotal = 0; }
     }
 
     public String getName() {

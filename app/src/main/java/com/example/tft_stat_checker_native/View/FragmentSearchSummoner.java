@@ -207,6 +207,7 @@ public class FragmentSearchSummoner extends Fragment {
         if (!pullToRefresh.isEnabled()) {
             pullToRefresh.setEnabled(true);
         }
+        pullToRefresh.setRefreshing(false);
         loadingIndicator.setVisibility(View.INVISIBLE);
     }
 
