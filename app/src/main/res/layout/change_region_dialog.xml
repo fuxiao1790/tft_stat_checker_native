@@ -1,12 +1,10 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:aapt="http://schemas.android.com/aapt"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimaryDark"
-    android:minHeight="400dp"
-    android:minWidth="200dp"
     >
 
     <TextView
@@ -23,30 +21,51 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/region_list"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
         android:layout_marginTop="8dp"
         app:layout_constraintBottom_toTopOf="@+id/ok_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView">
+
     </androidx.recyclerview.widget.RecyclerView>
 
     <Button
         android:id="@+id/ok_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="4dp"
+        android:paddingStart="4dp"
+        android:paddingTop="4dp"
+        android:paddingEnd="4dp"
+        android:paddingBottom="4dp"
         android:text="OK"
+        android:textColor="@color/textPrimary"
+        android:background="@drawable/click_ripple_bg"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        />
+        app:layout_constraintTop_toBottomOf="@+id/region_list"/>
 
     <Button
         android:id="@+id/cancel_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="4dp"
+        android:paddingStart="4dp"
+        android:paddingTop="4dp"
+        android:paddingEnd="4dp"
+        android:paddingBottom="4dp"
         android:text="Cancel"
+        android:textColor="@color/textPrimary"
+        android:background="@drawable/click_ripple_bg"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/ok_button" />
+        app:layout_constraintEnd_toStartOf="@+id/ok_button"
+        app:layout_constraintTop_toBottomOf="@+id/region_list" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

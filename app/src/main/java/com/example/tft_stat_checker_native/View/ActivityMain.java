@@ -7,6 +7,7 @@ import android.widget.LinearLayout;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 
 import com.example.tft_stat_checker_native.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -56,11 +57,10 @@ public class ActivityMain extends FragmentActivity {
         if (activeFragment != null) {
             getSupportFragmentManager()
                     .beginTransaction()
-                    .setCustomAnimations(R.anim.fragment_transition_in, R.anim.fragment_transition_out, R.anim.fragment_transition_in, R.anim.fragment_transition_out)
+                    //.setCustomAnimations(R.anim.fragment_transition_in, R.anim.fragment_transition_out, R.anim.fragment_transition_in, R.anim.fragment_transition_out)
                     .add(R.id.nav_content_container, fragment)
                     .hide(activeFragment)
                     .show(fragment)
-                    .addToBackStack("")
                     .commit();
         }
     }
@@ -68,22 +68,22 @@ public class ActivityMain extends FragmentActivity {
     private void showFragment(Fragment fragment, String tag) {
         getSupportFragmentManager()
                 .beginTransaction()
-                .setCustomAnimations(R.anim.fragment_transition_in, R.anim.fragment_transition_out, R.anim.fragment_transition_in, R.anim.fragment_transition_out)
+                //.setCustomAnimations(R.anim.fragment_transition_in, R.anim.fragment_transition_out, R.anim.fragment_transition_in, R.anim.fragment_transition_out)
                 .hide(activeFragment)
                 .show(fragment)
-                .addToBackStack("")
                 .commit();
     }
 
     private void iniBottomNav() {
+        // swap to selected frag on click
+        // if frag is not yet created
+        // create, add, and swap to frag
         bottomNav.setOnNavigationItemSelectedListener((menuItem) -> {
             // ignore page reselect
+            // reselect is handled below
             if (activeFragmentID == menuItem.getItemId()) {
                 return false;
             }
-            // swap to selected frag
-            // if frag is not yet created
-            // create, add, and swap to frag
             switch(menuItem.getItemId()) {
                 case R.id.search_summoner: {
                     if (searchSummoner == null) {
@@ -122,6 +122,7 @@ public class ActivityMain extends FragmentActivity {
             return false;
         });
 
+        // handle page reselected
         bottomNav.setOnNavigationItemReselectedListener((menuItem) -> {
             switch(menuItem.getItemId()) {
                 case R.id.search_summoner: { searchSummoner.onReselect(); break; }
@@ -129,7 +130,22 @@ public class ActivityMain extends FragmentActivity {
                 case R.id.unit_viewer: { unitViewer.onReselect(); break; }
             }
         });
+    }
 
-
+    @Override
+    public void onBackPressed() {
+        if (activeFragment instanceof FragmentUnitViewer) {
+            if (!((FragmentUnitViewer) activeFragment).onBackPressed()) {
+                super.onBackPressed();
+            }
+        } else if (activeFragment instanceof FragmentItemViewer) {
+            if (!((FragmentItemViewer) activeFragment).onBackPressed()) {
+                super.onBackPressed();
+            }
+        } else if (activeFragment instanceof  FragmentSearchSummoner) {
+            if (!((FragmentSearchSummoner) activeFragment).onBackPressed()) {
+                super.onBackPressed();
+            }
+        }
     }
 }

@@ -1,9 +1,109 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <TextView
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:aapt="http://schemas.android.com/aapt"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/colorPrimaryDark"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:id="@+id/root_view"
+    >
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/match_history_card_list_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/match_history_card_list"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="1dp"
+            android:background="@color/colorPrimaryDark"
+            android:verticalScrollbarPosition="right" />
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/search_bar_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:elevation="10dp">
+
+        <aapt:attr name="android:background" >
+            <shape xmlns:android="http://schemas.android.com/apk/res/android">
+                <solid android:color="@color/colorPrimaryLight"/>
+                <corners android:radius="50dp"/>
+                <padding android:left="24sp" android:top="6dp" android:right="8dp" android:bottom="6dp" />
+            </shape>
+        </aapt:attr>
+
+        <TextView
+            android:id="@+id/platform_text"
+            android:layout_width="wrap_content"
+            android:layout_height="38dp"
+            android:paddingTop="0dp"
+            android:paddingBottom="0dp"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:text="NA"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            android:textColor="@color/textPrimary"
+            android:gravity="center"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            xmlns:aapt="http://schemas.android.com/aapt"
+            >
+            <aapt:attr name="android:background" >
+                <shape xmlns:android="http://schemas.android.com/apk/res/android">
+                    <solid android:color="@color/changeRegionButtonBG"/>
+                    <corners android:radius="50dp"/>
+                    <padding android:left="16dp" android:top="16dp" android:right="16dp" android:bottom="16dp" />
+                </shape>
+            </aapt:attr>
+        </TextView>
+
+        <TextView
+            android:id="@+id/search_text"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:gravity="center|left"
+            android:text="Search by Summoner Name"
+            android:textColor="@color/textHint"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/platform_text"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ProgressBar
+        android:id="@+id/loading_indicator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="FRAGMENT SEARCH SUMMONER" />
-</LinearLayout>
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/match_history_card_list_container"
+        app:layout_constraintEnd_toEndOf="@+id/match_history_card_list_container"
+        app:layout_constraintStart_toStartOf="@+id/match_history_card_list_container"
+        app:layout_constraintTop_toTopOf="@+id/match_history_card_list_container" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

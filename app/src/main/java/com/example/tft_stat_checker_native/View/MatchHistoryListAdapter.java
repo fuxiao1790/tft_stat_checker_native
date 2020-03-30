@@ -9,10 +9,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.asynclayoutinflater.view.AsyncLayoutInflater;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
@@ -70,6 +72,7 @@ public class MatchHistoryListAdapter extends RecyclerView.Adapter<MatchHistoryLi
     private String platform;
 
     private LayoutInflater layoutInflater;
+    private AsyncLayoutInflater asyncLayoutInflater;
 
     public MatchHistoryListAdapter(Context ctx, RequestQueue queue) {
         this.data = new ArrayList<>();
@@ -81,6 +84,7 @@ public class MatchHistoryListAdapter extends RecyclerView.Adapter<MatchHistoryLi
         this.unitIconsStorage = new HashMap<>();
         this.traitIconsStorage = new HashMap<>();
         this.layoutInflater = LayoutInflater.from(ctx);
+        this.asyncLayoutInflater = new AsyncLayoutInflater(ctx);
     }
 
     public void setPlatform(String platform) {
@@ -167,9 +171,7 @@ public class MatchHistoryListAdapter extends RecyclerView.Adapter<MatchHistoryLi
             final MatchHistoryListContentViewHolder contentViewHolder = (MatchHistoryListContentViewHolder) holder;
 
             // set on click listener
-            holder.itemView.setOnClickListener((view) -> {
-                listItemOnClickListener.onItemClicked(holder.getLayoutPosition());
-            });
+            holder.itemView.setOnClickListener((view) -> listItemOnClickListener.onItemClicked(holder.getLayoutPosition()));
 
             // if current item has data render item normally
             // else fetch data and update state and notify recylcerview to update
@@ -282,6 +284,7 @@ public class MatchHistoryListAdapter extends RecyclerView.Adapter<MatchHistoryLi
 
                 // get drawable name from data
                 String drawableName = currentData.getUnits().get(i).getCharacterID().toLowerCase();
+
                 ImageView unitIcon = (ImageView) layoutInflater.inflate(R.layout.match_history_list_card_unit_icon, unitIconContainer, false);
                 // get resource id
                 Context ctx = unitIcon.getContext();

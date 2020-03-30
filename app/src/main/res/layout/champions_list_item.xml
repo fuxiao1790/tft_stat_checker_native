@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:clickable="true"
+    android:layout_marginTop="16dp"
+    >
+
+    <ImageView
+        android:id="@+id/unit_icon"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:adjustViewBounds="true"
+        android:scaleType="fitXY"
+        android:src="@drawable/tft2_aatrox"
+        android:background="@drawable/unit_corner"
+        android:outlineProvider="background"
+        />
+
+    <TextView
+        android:id="@+id/unit_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="champion_name"
+        android:textAlignment="center"
+        android:textColor="@color/textPrimary"
+        android:textSize="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/unit_icon"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

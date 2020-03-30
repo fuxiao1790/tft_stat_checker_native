@@ -6,7 +6,7 @@
     <dimen name="trait_icon_width">36dp</dimen>
     <dimen name="trait_icon_height">36dp</dimen>
 
-    <dimen name="unit_icon_border_radius">4dp</dimen>
+    <dimen name="unit_icon_border_radius">6dp</dimen>
     <dimen name="trait_icon_border_radius">4dp</dimen>
 
     <dimen name="item_icon_border_radius">2dp</dimen>

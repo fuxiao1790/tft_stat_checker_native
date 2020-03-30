@@ -17,7 +17,9 @@ import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SnapHelper;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.volley.Request;
@@ -78,7 +80,7 @@ public class FragmentSearchSummoner extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        ViewGroup contentView = (ViewGroup) inflater.inflate(R.layout.activity_search_summoner, container, false);
+        ViewGroup contentView = (ViewGroup) inflater.inflate(R.layout.fragment_search_summoner, container, false);
         iniComponents(contentView);
         iniRecyclerView();
         iniSwipeRefresh();
@@ -167,7 +169,6 @@ public class FragmentSearchSummoner extends Fragment {
         matchHistoryRecyclerView.setAdapter(matchHistoryListAdapter);
 
         matchHistoryListAdapter.setListItemOnClickListener((int position) -> {
-
             switch (matchHistoryListAdapter.getItemStatus(position)) {
                 case MatchHistoryListAdapter.FAILED: {
                     matchHistoryListAdapter.reLoadData(position);
@@ -375,5 +376,9 @@ public class FragmentSearchSummoner extends Fragment {
         } else {
             matchHistoryRecyclerView.smoothScrollToPosition(0);
         }
+    }
+
+    public boolean onBackPressed() {
+        return false;
     }
 }

@@ -27,7 +27,7 @@
             android:background="@null"
             android:gravity="center|left"
             android:hint="Search by Summoner Name"
-            android:imeOptions="actionSearch"
+            android:imeOptions="actionSearch|flagNoExtractUi"
             android:inputType="text"
             android:selectAllOnFocus="true"
             android:singleLine="true"

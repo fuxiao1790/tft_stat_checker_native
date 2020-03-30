@@ -1,7 +1,10 @@
 package com.example.tft_stat_checker_native.Modal;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 public class TraitData {
     private String name;

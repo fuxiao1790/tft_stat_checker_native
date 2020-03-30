@@ -27,6 +27,7 @@ public class ActivityEditSearchParam extends FragmentActivity {
     private Button changeRegionButton;
     private RecyclerView searchHistoryList;
     private SearchHistoryListAdapter searchHistoryListAdapter;
+    private ChangeRegionBottomSheet changeRegionBottomSheet;
 
     private String searchText;
     private String platform;
@@ -43,6 +44,7 @@ public class ActivityEditSearchParam extends FragmentActivity {
         iniChangeRegionButton();
         iniSearchHistoryList();
         iniSearchTextField();
+        iniBottomSheet();
 
         searchTextField.requestFocus();
     }
@@ -83,17 +85,17 @@ public class ActivityEditSearchParam extends FragmentActivity {
         searchTextField = findViewById(R.id.search_text);
         changeRegionButton = findViewById(R.id.change_region_button);
         searchHistoryList = findViewById(R.id.search_history_list);
+        changeRegionBottomSheet = new ChangeRegionBottomSheet();
+    }
+
+    private void iniBottomSheet() {
+        changeRegionBottomSheet.setDefaultHighlightedItem(platform);
+        changeRegionBottomSheet.setOnDialogConfirmListener((platform) -> updatePlatform(platform));
     }
 
     private void iniChangeRegionButton() {
         changeRegionButton.setText(this.platform);
-
-        changeRegionButton.setOnClickListener((view) -> {
-            ChangeRegionDialog changeRegionDialog = new ChangeRegionDialog();
-            changeRegionDialog.setDefaultHighlightedItem(platform);
-            changeRegionDialog.setOnDialogConfirmListener((platform) -> updatePlatform(platform));
-            changeRegionDialog.show(getSupportFragmentManager(), "wtf?");
-        });
+        changeRegionButton.setOnClickListener((view) -> changeRegionBottomSheet.show(getSupportFragmentManager(), "wtf?"));
     }
 
     private void iniSearchTextField() {
